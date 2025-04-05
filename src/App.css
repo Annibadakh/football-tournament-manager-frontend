@@ -1,0 +1,30 @@
+:root{
+  --primary-color: #094D9E;
+  --secondary: #f08b4d;
+  --tertiary: #496F9D;
+  --fourthcolor: #5C90B2;
+  --black: #141414;
+  --white: #fff;
+  --gray: rgba(128, 128, 128, 0.37);
+  --box-shadow: 0 .5rem 1rem rgba(0, 0, 0, 0.517);
+}
+
+
+html{
+  scroll-padding-top: 9rem;
+  scroll-behavior: smooth;
+}
+
+html::-webkit-scrollbar{
+  width: 0.5rem;
+}
+
+html::-webkit-scrollbar-track{
+  background: transparent;
+}
+
+html::-webkit-scrollbar-thumb{
+  background: var(--primary-color);
+}
+
+
