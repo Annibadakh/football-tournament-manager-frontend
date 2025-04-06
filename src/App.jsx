@@ -9,13 +9,22 @@ import Home from "./Dashboard/Home";
 import AddTournament from "./Dashboard/AddTournament";
 import TeamForm from "./Dashboard/TeamForm";
 import CaptainPlayers from "./Dashboard/CaptainPlayers";
+import Tournaments from "./Components/Tournaments";
+import TeamPage from "./Components/TeamPage";
+import LiveMatch from "./Components/LiveMatch";
+import Home2 from "./Components/Home";
 
 function App() {
   return (
     <div className="font-custom">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Main />} />
+          <Route path="/" element={<Main />}>
+          <Route index element={<Home2 />} />
+          <Route path="tournaments" element={<Tournaments />} />
+          <Route path="team/:id" element={<TeamPage />} />
+          <Route path="live" element={<LiveMatch />} />
+          </Route>
           <Route path="/login" element={<Login />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />}>

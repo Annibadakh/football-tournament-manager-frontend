@@ -19,7 +19,9 @@ export default {
         custom: 'var(--box-shadow)',
       },
       fontFamily: {
-        custom: ['"Times New Roman"', 'serif'], 
+        custom: ['"Times New Roman"', 'serif'],
+        anton: ['Anton', 'sans-serif'],
+        spartan: ['League Spartan', 'sans-serif'],
       },
       before: ['hover', 'focus'],
       after: ['hover', 'focus'],
