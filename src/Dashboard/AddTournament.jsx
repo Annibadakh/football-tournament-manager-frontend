@@ -103,86 +103,171 @@ const TournamentForm = () => {
     <div className="max-w-4xl mx-auto p-6">
       <button
         onClick={() => setShowForm(true)}
-        className="mb-4 px-6 py-2 bg-blue-600 text-white rounded"
+        className="mb-6 px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition"
       >
         Add Tournament
       </button>
-
+  
       {/* Tournament Form */}
       {showForm && (
-        <div className="p-6 bg-white rounded shadow mb-6">
-          <h2 className="text-xl font-semibold mb-4">Tournament Details</h2>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <input name="name" onChange={handleChange} placeholder="Tournament Name" className="input" required />
-            <input name="totalTeams" type="number" onChange={handleChange} placeholder="Total Teams" className="input" required />
-
-            <select name="type" onChange={handleChange} className="input" required>
+        <div className="p-6 bg-white rounded-xl shadow-md mb-8 border border-gray-200">
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">Tournament Details</h2>
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <input
+              name="name"
+              onChange={handleChange}
+              placeholder="Tournament Name"
+              required
+              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <input
+              name="totalTeams"
+              type="number"
+              onChange={handleChange}
+              placeholder="Total Teams"
+              required
+              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+  
+            <select
+              name="type"
+              onChange={handleChange}
+              required
+              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
               <option value="league">League</option>
               <option value="group">Group</option>
               <option value="knockout">Knockout</option>
             </select>
-
-            <input name="teamSize" type="number" onChange={handleChange} placeholder="Team Size" className="input" required />
-            <input name="startDate" type="date" onChange={handleChange} className="input" required />
-            <input name="endDate" type="date" onChange={handleChange} className="input" required />
-            <input name="amountPerTeam" type="number" onChange={handleChange} placeholder="Amount Per Team" className="input" required />
-            <input name="pointsWin" type="number" onChange={handleChange} placeholder="Points for Win" className="input" required />
-            <input name="pointsDraw" type="number" onChange={handleChange} placeholder="Points for Draw" className="input" required />
-            <input name="pointsLoss" type="number" onChange={handleChange} placeholder="Points for Loss" className="input" required />
-
+  
+            <input
+              name="teamSize"
+              type="number"
+              onChange={handleChange}
+              placeholder="Team Size"
+              required
+              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <input
+              name="startDate"
+              type="date"
+              onChange={handleChange}
+              required
+              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <input
+              name="endDate"
+              type="date"
+              onChange={handleChange}
+              required
+              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <input
+              name="amountPerTeam"
+              type="number"
+              onChange={handleChange}
+              placeholder="Amount Per Team"
+              required
+              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <input
+              name="pointsWin"
+              type="number"
+              onChange={handleChange}
+              placeholder="Points for Win"
+              required
+              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <input
+              name="pointsDraw"
+              type="number"
+              onChange={handleChange}
+              placeholder="Points for Draw"
+              required
+              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <input
+              name="pointsLoss"
+              type="number"
+              onChange={handleChange}
+              placeholder="Points for Loss"
+              required
+              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+  
             {/* File Upload */}
             <div>
-              <label className="block mb-1 font-medium">Tournament Logo</label>
-              {isPhotoSave && <input type="file" accept="image/*" onChange={handleFileChange} className="block" />}
-              {preview && <img src={preview} alt="preview" className="mt-2 h-24 rounded shadow" />}
+              <label className="block mb-2 font-medium text-gray-700">Tournament Logo</label>
+              {isPhotoSave && (
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="w-full block border border-gray-300 rounded-md px-4 py-2"
+                />
+              )}
+              {preview && (
+                <img
+                  src={preview}
+                  alt="preview"
+                  className="mt-4 h-24 w-24 object-cover rounded-md shadow-md"
+                />
+              )}
               {isPhotoSave ? (
                 <button
                   type="button"
                   onClick={handleUpload}
-                  className="mt-2 px-4 py-2 bg-blue-500 text-white rounded"
+                  className="mt-4 px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition disabled:opacity-60"
                   disabled={uploading}
                 >
                   {uploading ? "Uploading..." : "Save Photo"}
                 </button>
               ) : (
-                <p>Photo Saved !!</p>
+                <p className="mt-2 text-green-600 font-semibold">Photo Saved !!</p>
               )}
             </div>
-
+  
             {!isPhotoSave ? (
-              <button type="submit" className="px-6 py-2 bg-green-600 text-white rounded">
+              <button
+                type="submit"
+                className="mt-6 px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition"
+              >
                 Submit Tournament
               </button>
             ) : (
-              <p>Save Photo First</p>
+              <p className="text-red-500 font-semibold">Save Photo First</p>
             )}
           </form>
         </div>
       )}
-
+  
       {/* Tournament Table */}
-      <div className="bg-white rounded shadow overflow-x-auto">
-        <table className="min-w-full table-auto">
-          <thead className="bg-gray-200">
+      <div className="bg-white rounded-xl shadow-md overflow-x-auto border border-gray-200">
+        <table className="min-w-full text-sm text-gray-700">
+          <thead className="bg-gray-100 text-gray-800">
             <tr>
-              <th className="p-3">Logo</th>
-              <th className="p-3">Name</th>
-              <th className="p-3">Type</th>
-              <th className="p-3">Teams</th>
-              <th className="p-3">Team Size</th>
-              <th className="p-3">Start</th>
-              <th className="p-3">End</th>
-              <th className="p-3">Amount</th>
-              <th className="p-3">Win</th>
-              <th className="p-3">Draw</th>
-              <th className="p-3">Loss</th>
+              <th className="p-3 text-left">Logo</th>
+              <th className="p-3 text-left">Name</th>
+              <th className="p-3 text-left">Type</th>
+              <th className="p-3 text-left">Teams</th>
+              <th className="p-3 text-left">Team Size</th>
+              <th className="p-3 text-left">Start</th>
+              <th className="p-3 text-left">End</th>
+              <th className="p-3 text-left">Amount</th>
+              <th className="p-3 text-left">Win</th>
+              <th className="p-3 text-left">Draw</th>
+              <th className="p-3 text-left">Loss</th>
             </tr>
           </thead>
           <tbody>
             {tournaments.map((t) => (
-              <tr key={t.uuid} className="text-center border-b">
+              <tr key={t.uuid} className="border-t hover:bg-gray-50 transition">
                 <td className="p-3">
-                  <img src={`${imgUrl}${t.logoUrl}`} alt="logo" className="h-10 w-10 object-cover rounded-full mx-auto" />
+                  <img
+                    src={`${imgUrl}${t.logoUrl}`}
+                    alt="logo"
+                    className="h-10 w-10 object-cover rounded-full"
+                  />
                 </td>
                 <td className="p-3">{t.name}</td>
                 <td className="p-3 capitalize">{t.type}</td>
@@ -201,6 +286,7 @@ const TournamentForm = () => {
       </div>
     </div>
   );
+  
 };
 
 export default TournamentForm;

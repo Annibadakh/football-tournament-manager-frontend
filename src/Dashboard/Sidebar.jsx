@@ -4,10 +4,10 @@ import { Link, useLocation } from "react-router-dom";
 const Sidebar = ({ isSidebarOpen, clickSidebar, userRole }) => {
     const location = useLocation(); 
     const links = [
-        { path: "settings", label: "Settings", role: "admin" },
         { path: "addtournament", label: "Add Tournament", role: "admin"},
         { path: "addteam", label: "Add Team", role: "admin"},
         { path: "addplayers", label: "Add Players", role: "captain"},
+        { path: "addmatches", label: "Add Matches", role: "admin"},
     ];
 
   const isActive = (path) => location.pathname === path;
