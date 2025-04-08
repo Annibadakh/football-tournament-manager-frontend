@@ -16,7 +16,9 @@ const Tournaments = () => {
 
       for (let t of res.data.list) {
         const teamRes = await axios.get(`${apiUrl}/team/get-teams/${t.uuid}`);
+        console.log(teamRes);
         setTeams((prev) => ({ ...prev, [t.uuid]: teamRes.data }));
+
       }
     };
     fetch();
@@ -41,7 +43,7 @@ const Tournaments = () => {
                   <li
                     key={team.id}
                     className="cursor-pointer text-blue-600 hover:underline"
-                    onClick={() => navigate(`/team/${team.id}`)}
+                    onClick={() => navigate(`/team/${team.uuid}`)}
                   >
                     {team.teamName} - Captain: {team.captainName}
                   </li>
