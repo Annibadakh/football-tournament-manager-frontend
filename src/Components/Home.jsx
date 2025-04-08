@@ -1,4 +1,5 @@
 
+import Comittee from "./Comittee";
 import poster from "./poster.png";
 
 const Home = () => {
@@ -7,8 +8,8 @@ const Home = () => {
       <h1 className="text-2xl text-center w-full h-auto font-bold mb-4">Recent Tournament</h1>
       <div>
         <img src={poster}></img>
-        
       </div>
+      <Comittee />
     </div>
   );
 };

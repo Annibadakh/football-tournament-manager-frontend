@@ -15,6 +15,8 @@ import Home2 from "./Components/Home";
 import MatchForm from "./Dashboard/MatchForm";
 import Matches from "./Components/Matches";
 import PointsTable from "./Components/PointsTable ";
+import Scorer from "./Dashboard/Scorer";
+import MatchDetails from "./Dashboard/MatchDetails";
 
 function App() {
   return (
@@ -37,6 +39,8 @@ function App() {
               <Route path="addteam" element={<TeamForm />} />
               <Route path="addplayers" element={<CaptainPlayers />} />
               <Route path="addmatches" element={<MatchForm />} />
+              <Route path="scorer" element={<Scorer />} />
+              <Route path="match-details/:matchId" element={<MatchDetails />} />
             </Route>
           </Route>
         </Routes>
