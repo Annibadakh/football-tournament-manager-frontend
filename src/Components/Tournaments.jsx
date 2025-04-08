@@ -42,6 +42,29 @@ const Tournaments = () => {
     fetchData();
   }, [apiUrl]);
 
+  // Helper function to render status badge
+  const renderStatusBadge = (isApproved) => {
+    if (isApproved === true) {
+      return (
+        <span className="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
+          Paid
+        </span>
+      );
+    } else if (isApproved === false) {
+      return (
+        <span className="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800">
+          Payment Pending
+        </span>
+      );
+    } else {
+      return (
+        <span className="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800">
+          Processing
+        </span>
+      );
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -118,9 +141,12 @@ const Tournaments = () => {
                           </div>
                         )}
                       </div>
-                      <div>
+                      <div className="flex-grow">
                         <p className="font-medium text-blue-600">{team.teamName}</p>
                         <p className="text-sm text-gray-500">Captain: {team.captainName}</p>
+                      </div>
+                      <div className="ml-auto">
+                        {renderStatusBadge(team.isApproved)}
                       </div>
                     </div>
                   ))}
