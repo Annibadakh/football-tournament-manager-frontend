@@ -2,6 +2,7 @@ import { useState } from "react";
 import api from "../Api";
 
 const TeamTable = ({ teams: initialTeams }) => {
+  const imgUrl = import.meta.env.VITE_IMAGE_URL;
   const [players, setPlayers] = useState([]);
   const [showPlayersFor, setShowPlayersFor] = useState(null);
   const [teams, setTeams] = useState(initialTeams);
@@ -63,7 +64,7 @@ const TeamTable = ({ teams: initialTeams }) => {
                       <td className="px-4 py-2 border-b">{index + 1}</td>
                       <td className="px-4 py-2 border-b">
                         <img
-                          src={`http://localhost:5000${p.photoUrl}`}
+                          src={`${imgUrl}${p.photoUrl}`}
                           alt="player"
                           className="h-10 w-10 object-cover rounded-full mx-auto"
                         />
@@ -111,7 +112,7 @@ const TeamTable = ({ teams: initialTeams }) => {
                 <td className="border px-4 py-2">{index + 1}</td>
                 <td className="p-3">
                   <img
-                    src={`http://localhost:5000${team.logoUrl}`}
+                    src={`${imgUrl}${team.logoUrl}`}
                     alt="logo"
                     className="h-10 w-10 object-cover rounded-full mx-auto"
                   />

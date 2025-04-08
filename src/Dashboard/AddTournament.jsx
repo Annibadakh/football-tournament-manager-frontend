@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import api from "../Api";
 
 const TournamentForm = () => {
+  const imgUrl = import.meta.env.VITE_IMAGE_URL;
   const [form, setForm] = useState({
     name: "",
     totalTeams: "",
@@ -182,7 +182,7 @@ const TournamentForm = () => {
             {tournaments.map((t) => (
               <tr key={t.uuid} className="text-center border-b">
                 <td className="p-3">
-                  <img src={`http://localhost:5000${t.logoUrl}`} alt="logo" className="h-10 w-10 object-cover rounded-full mx-auto" />
+                  <img src={`${imgUrl}${t.logoUrl}`} alt="logo" className="h-10 w-10 object-cover rounded-full mx-auto" />
                 </td>
                 <td className="p-3">{t.name}</td>
                 <td className="p-3 capitalize">{t.type}</td>

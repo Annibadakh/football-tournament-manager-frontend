@@ -4,6 +4,7 @@ import { useAuth } from "../Context/AuthContext";
 
 
 const CaptainPlayers = () => {
+  const imgUrl = import.meta.env.VITE_IMAGE_URL;
     const {user} = useAuth();
   const [team, setTeam] = useState(null);
   const [tournament, setTournament] = useState(null);
@@ -175,7 +176,7 @@ const CaptainPlayers = () => {
             <tr key={p.playerId} className="text-center">
               <td className="border px-3 py-2">{i + 1}</td>
               <td className="border px-3 py-2">
-                <img src={`http://localhost:5000${p.photoUrl}`} alt="player" className="h-10 w-10 object-cover rounded-full mx-auto" />
+                <img src={`${imgUrl}${p.photoUrl}`} alt="player" className="h-10 w-10 object-cover rounded-full mx-auto" />
               </td>
               <td className="border px-3 py-2">{p.name}</td>
               <td className="border px-3 py-2">{p.position}</td>

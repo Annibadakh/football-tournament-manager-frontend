@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import api from "../Api";
 
 const TeamPage = () => {
+  const imgUrl = import.meta.env.VITE_IMAGE_URL;
   const { id } = useParams();
   const [team, setTeam] = useState(null);
 
@@ -20,7 +21,7 @@ const TeamPage = () => {
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-2">{team.teamName}</h1>
       <img
-        src={`http://localhost:5000${team.logoUrl}`}
+        src={`${imgUrl}${team.logoUrl}`}
         alt="logo"
         className="h-24 mb-2"
       />
