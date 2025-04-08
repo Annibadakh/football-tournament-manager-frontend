@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import logo from './Tournament.png';
+import logo from './tournament.png';
 import { useNavigate } from "react-router-dom";
 
 
