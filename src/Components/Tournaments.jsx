@@ -31,6 +31,7 @@ const Tournaments = () => {
         });
         
         setTeams(teamData);
+        console.log(teamData);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {

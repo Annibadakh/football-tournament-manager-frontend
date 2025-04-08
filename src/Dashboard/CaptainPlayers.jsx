@@ -22,6 +22,7 @@ const CaptainPlayers = () => {
   const [preview, setPreview] = useState(null);
   const [photoSaved, setPhotoSaved] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState("");
 
   useEffect(() => {
     fetchTeam();
@@ -52,22 +53,31 @@ const CaptainPlayers = () => {
 
   const handleFileChange = (e) => {
     const selected = e.target.files[0];
-    setFile(selected);
-    setPreview(URL.createObjectURL(selected));
+    if (selected) {
+      setFile(selected);
+      setPreview(URL.createObjectURL(selected));
+      setUploadError("");
+    }
   };
 
   const handleUpload = async () => {
-    if (!file) return alert("Select a file");
+    if (!file) {
+      setUploadError("Please select an image file first.");
+      return;
+    }
+    
+    setUploadError("");
     setIsUploading(true);
     const formData = new FormData();
     formData.append("file", file);
+    
     try {
       const res = await api.post("/upload-photo", formData);
       setForm({ ...form, photoUrl: res.data.imageUrl });
       setPhotoSaved(true);
     } catch (err) {
       console.error("Upload error", err);
-      alert("Failed to upload image. Please try again.");
+      setUploadError("Failed to upload image. Please try again.");
     } finally {
       setIsUploading(false);
     }
@@ -94,6 +104,7 @@ const CaptainPlayers = () => {
     setPreview(null);
     setFile(null);
     setIsUploading(false);
+    setUploadError("");
     setForm({
       name: "",
       position: "",
@@ -176,16 +187,23 @@ const CaptainPlayers = () => {
             required
           />
 
-          {/* Upload Section with Loader */}
+          {/* Upload Section with Loader and Error Alert */}
           <div>
             <label className="block font-medium mb-1">Upload Player Photo</label>
             {!photoSaved && (
               <>
                 <input type="file" accept="image/*" onChange={handleFileChange} />
+                
+                {uploadError && (
+                  <div className="mt-2 bg-red-100 border border-red-400 text-red-700 px-3 py-2 rounded text-sm">
+                    {uploadError}
+                  </div>
+                )}
+                
                 <button
                   type="button"
                   onClick={handleUpload}
-                  disabled={isUploading || !file}
+                  disabled={isUploading}
                   className={`mt-2 px-4 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 ${isUploading ? 'opacity-75 cursor-not-allowed' : ''}`}
                 >
                   {isUploading ? (
