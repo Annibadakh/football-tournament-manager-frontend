@@ -20,7 +20,7 @@ const Header = () => {
             </div>
             
             <div>
-                <h1 className='text-lg sm:text-2xl font-bold'>Football Tournament Manager</h1>
+                <h1 className='text-lg sm:text-2xl font-bold'>Tournament Manager</h1>
             </div>
             
             <div>

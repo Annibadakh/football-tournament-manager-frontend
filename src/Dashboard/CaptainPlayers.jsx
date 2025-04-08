@@ -3,6 +3,7 @@ import api from "../Api";
 import { useAuth } from "../Context/AuthContext";
 
 const CaptainPlayers = () => {
+  const MAX_PLAYERS = 11; // Maximum number of players allowed
   const imgUrl = import.meta.env.VITE_IMAGE_URL;
   const { user } = useAuth();
   const [team, setTeam] = useState(null);
@@ -20,6 +21,7 @@ const CaptainPlayers = () => {
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [photoSaved, setPhotoSaved] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
     fetchTeam();
@@ -56,6 +58,7 @@ const CaptainPlayers = () => {
 
   const handleUpload = async () => {
     if (!file) return alert("Select a file");
+    setIsUploading(true);
     const formData = new FormData();
     formData.append("file", file);
     try {
@@ -64,6 +67,9 @@ const CaptainPlayers = () => {
       setPhotoSaved(true);
     } catch (err) {
       console.error("Upload error", err);
+      alert("Failed to upload image. Please try again.");
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -87,6 +93,7 @@ const CaptainPlayers = () => {
     setPhotoSaved(false);
     setPreview(null);
     setFile(null);
+    setIsUploading(false);
     setForm({
       name: "",
       position: "",
@@ -96,6 +103,9 @@ const CaptainPlayers = () => {
       addPoint: 0,
     });
   };
+
+  // Check if team is full
+  const isTeamFull = players.length >= MAX_PLAYERS;
 
   if (!team) return <p className="text-center mt-10">Loading team info...</p>;
 
@@ -107,16 +117,33 @@ const CaptainPlayers = () => {
         <p><strong className="text-blue-600">Team Name:</strong> {team.teamName}</p>
       </div>
 
+      {/* Team Status Message */}
+      <div className="text-center mb-4">
+        {isTeamFull ? (
+          <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-2 rounded mb-4">
+            <p className="font-semibold">Team is full!</p>
+            <p className="text-sm">Maximum number of players ({MAX_PLAYERS}) has been reached.</p>
+          </div>
+        ) : (
+          <div className="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-2 rounded mb-4">
+            <p className="text-sm">You can add {MAX_PLAYERS - players.length} more player(s) to complete your team.</p>
+          </div>
+        )}
+      </div>
+
       <div className="text-center mb-4">
         <button
           onClick={() => setFormVisible(!formVisible)}
-          className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md shadow"
+          disabled={isTeamFull}
+          className={`px-5 py-2 ${isTeamFull 
+            ? 'bg-gray-400 cursor-not-allowed' 
+            : 'bg-blue-600 hover:bg-blue-700'} text-white rounded-md shadow`}
         >
           {formVisible ? "Cancel" : "➕ Add Player"}
         </button>
       </div>
 
-      {formVisible && (
+      {formVisible && !isTeamFull && (
         <form onSubmit={handleSubmit} className="space-y-4 bg-gray-50 p-4 rounded-lg border mb-6">
           <input
             name="name"
@@ -149,7 +176,7 @@ const CaptainPlayers = () => {
             required
           />
 
-          {/* Upload Section */}
+          {/* Upload Section with Loader */}
           <div>
             <label className="block font-medium mb-1">Upload Player Photo</label>
             {!photoSaved && (
@@ -158,9 +185,20 @@ const CaptainPlayers = () => {
                 <button
                   type="button"
                   onClick={handleUpload}
-                  className="mt-2 px-4 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+                  disabled={isUploading || !file}
+                  className={`mt-2 px-4 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 ${isUploading ? 'opacity-75 cursor-not-allowed' : ''}`}
                 >
-                  Upload Photo
+                  {isUploading ? (
+                    <span className="flex items-center justify-center">
+                      <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Uploading...
+                    </span>
+                  ) : (
+                    "Upload Photo"
+                  )}
                 </button>
               </>
             )}
@@ -188,7 +226,7 @@ const CaptainPlayers = () => {
       )}
 
       {/* Player Table */}
-      <h3 className="text-xl font-semibold mb-3 border-b pb-2">Players List ({players.length})</h3>
+      <h3 className="text-xl font-semibold mb-3 border-b pb-2">Players List ({players.length}/{MAX_PLAYERS})</h3>
       <div className="overflow-x-auto">
         <table className="w-full border border-gray-300 text-sm text-center">
           <thead className="bg-gray-100 text-gray-700">
