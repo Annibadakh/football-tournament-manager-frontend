@@ -1,10 +1,11 @@
-import { useEffect, useState, useRef } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import api from "../Api";
 
 const MatchDetails = () => {
   const { matchId } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
   const tournamentName = location.state?.tournamentName || "Tournament";
   
   const [match, setMatch] = useState(null);
@@ -13,24 +14,11 @@ const MatchDetails = () => {
   const [team1, setTeam1] = useState(null);
   const [team2, setTeam2] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [timer, setTimer] = useState(0);
-  const [timerStatus, setTimerStatus] = useState("stopped");
   const [statusMessage, setStatusMessage] = useState("");
   
-  const timerRef = useRef(null);
-
   useEffect(() => {
     fetchMatchDetails();
   }, [matchId]);
-
-  useEffect(() => {
-    // Clear interval when component unmounts
-    return () => {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-      }
-    };
-  }, []);
 
   const fetchMatchDetails = async () => {
     setLoading(true);
@@ -50,28 +38,43 @@ const MatchDetails = () => {
       const team1PlayersRes = await api.get(`/player/get-players/${matchData.team1Id}`);
       const team2PlayersRes = await api.get(`/player/get-players/${matchData.team2Id}`);
       
-      // Assuming the API returns an array of players
+      // Initialize players with scores from backend if available
       setTeam1Players(team1PlayersRes.data.map(player => ({
         ...player,
-        goals: 0 // Add a goals property for tracking scores
+        goals: 0 // Initial value, will be updated from match player data if available
       })));
       
       setTeam2Players(team2PlayersRes.data.map(player => ({
         ...player,
-        goals: 0 // Add a goals property for tracking scores
+        goals: 0 // Initial value, will be updated from match player data if available
       })));
       
-      // Initialize timer based on match status
-      if (matchData.status === 'started' || matchData.status === 'half-time' || 
-          matchData.status === 'break' || matchData.status === 'paused') {
-        setTimerStatus(matchData.status);
+      // Update status message based on match status
+      if (matchData.status) {
         updateStatusMessage(matchData.status);
+      }
+      
+      // If match is ended, fetch the latest match result to ensure accurate data
+      if (matchData.status === 'ended') {
+        refreshMatchResult();
       }
       
     } catch (err) {
       console.error("Error fetching match details:", err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const refreshMatchResult = async () => {
+    try {
+      // Get the latest match data to ensure accurate score and outcome
+      const refreshRes = await api.get(`/match/get-match/${matchId}`);
+      if (refreshRes.data) {
+        setMatch(refreshRes.data);
+      }
+    } catch (err) {
+      console.error("Error refreshing match result:", err);
     }
   };
 
@@ -105,160 +108,152 @@ const MatchDetails = () => {
     
     try {
       const res = await api.post(`/match/update-status/${matchId}`, { status: newStatus });
-      console.log(res);
-      setMatch({ ...match, status: newStatus });
-      setTimerStatus(newStatus);
+      console.log("Status update response:", res.data);
+      
+      // Update local state with response data
+      if (res.data && res.data.match) {
+        setMatch(res.data.match);
+      } else {
+        // Fallback to local update if API doesn't return updated match
+        setMatch({ ...match, status: newStatus });
+      }
+      
       updateStatusMessage(newStatus);
       
-      // Handle timer based on new status
-      if (newStatus === 'started') {
-        startTimer();
-      } else if (newStatus === 'half-time') {
-        stopTimer();
-        // Start half-time timer if halfTime is defined
-        if (match.halfTime) {
-          startBreakTimer(parseInt(match.halfTime) * 60);
-        }
-      } else if (newStatus === 'break') {
-        stopTimer();
-        // Start break timer if breakTime is defined
-        if (match.breakTime) {
-          startBreakTimer(parseInt(match.breakTime) * 60);
-        }
-      } else if (newStatus === 'paused') {
-        pauseTimer();
-      } else if (newStatus === 'ended') {
-        stopTimer();
-        // Update match outcome
-        await updateMatchOutcome();
+      // If changing to 'ended' status, refresh match result after a short delay
+      // to ensure backend has processed the final result
+      if (newStatus === 'ended') {
+        setTimeout(refreshMatchResult, 500);
       }
+      
     } catch (err) {
       console.error("Error updating match status:", err);
     }
   };
 
-  const startTimer = () => {
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-    }
-    
-    setTimerStatus("running");
-    timerRef.current = setInterval(() => {
-      setTimer(prevTimer => prevTimer + 1);
-    }, 1000);
-  };
-
-  const pauseTimer = () => {
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-    }
-    setTimerStatus("paused");
-  };
-
-  const stopTimer = () => {
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-    }
-    setTimerStatus("stopped");
-  };
-
-  const startBreakTimer = (seconds) => {
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-    }
-    
-    setTimer(seconds);
-    setTimerStatus("countdown");
-    
-    timerRef.current = setInterval(() => {
-      setTimer(prevTimer => {
-        if (prevTimer <= 1) {
-          clearInterval(timerRef.current);
-          setTimerStatus("stopped");
-          return 0;
-        }
-        return prevTimer - 1;
-      });
-    }, 1000);
-  };
-
-  const formatTime = (seconds) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  };
-
-  const handleScoreChange = (teamNumber, playerIndex, change) => {
-    
-    const ScoreData = {
-      playerId: team1Players[playerIndex].playerId,
-      playerNAme: team1Players[playerIndex].name,
-      MatchId: match.id,
-      scoreId: team1.uuid,
-      conceded: team2.uuid,
-      change: change
-    }
-    console.log(ScoreData);
-    if (teamNumber === 1) {
-      const updatedPlayers = [...team1Players];
-      updatedPlayers[playerIndex].goals = Math.max(0, updatedPlayers[playerIndex].goals + change);
-      setTeam1Players(updatedPlayers);
-      
-      if (match) {
-        const totalGoals = updatedPlayers.reduce((sum, player) => sum + player.goals, 0);
-        setMatch({ ...match, totalGoalsTeam1: totalGoals });
-      }
-    } else {
-      const updatedPlayers = [...team2Players];
-      updatedPlayers[playerIndex].goals = Math.max(0, updatedPlayers[playerIndex].goals + change);
-      setTeam2Players(updatedPlayers);
-      
-      if (match) {
-        const totalGoals = updatedPlayers.reduce((sum, player) => sum + player.goals, 0);
-        setMatch({ ...match, totalGoalsTeam2: totalGoals });
-      }
-    }
-  };
-
-  const updateMatchOutcome = async () => {
+  const handleScoreChange = async (teamNumber, playerIndex, change) => {  
     if (!match) return;
     
-    // Calculate total goals
-    const totalGoalsTeam1 = team1Players.reduce((sum, player) => sum + player.goals, 0);
-    const totalGoalsTeam2 = team2Players.reduce((sum, player) => sum + player.goals, 0);
-    
-    // Determine match outcome
-    let matchOutcome = 'tie';
-    let winnerTeamId = null;
-    
-    if (totalGoalsTeam1 > totalGoalsTeam2) {
-      matchOutcome = 'team1';
-      winnerTeamId = match.team1Id;
-    } else if (totalGoalsTeam2 > totalGoalsTeam1) {
-      matchOutcome = 'team2';
-      winnerTeamId = match.team2Id;
-    }
-    
-    // Update match in backend
     try {
-      await api.post(`/match/update-result/${matchId}`, {
-        totalGoalsTeam1,
-        totalGoalsTeam2,
-        matchOutcome,
-        winnerTeamId
-      });
+      let scoreData;
       
-      // Update local state
-      setMatch({
-        ...match,
-        totalGoalsTeam1,
-        totalGoalsTeam2,
-        matchOutcome,
-        winnerTeamId
-      });
+      if (teamNumber === 1) {
+        scoreData = {
+          playerId: team1Players[playerIndex].playerId,
+          playerName: team1Players[playerIndex].name || team1Players[playerIndex].playerName,
+          matchId: match.id,
+          scoreId: team1.uuid,
+          concededId: team2.uuid,
+          change: change
+        };
+      } else {
+        scoreData = {
+          playerId: team2Players[playerIndex].playerId,
+          playerName: team2Players[playerIndex].name || team2Players[playerIndex].playerName,
+          matchId: match.id,
+          scoreId: team2.uuid,
+          concededId: team1.uuid,
+          change: change
+        };
+      }
+      
+      console.log("Score update request:", scoreData);
+      const response = await api.post('/match/update-score', scoreData);
+      console.log("Score update response:", response.data);
+      
+      // Update match data from response
+      if (response.data.match) {
+        setMatch(response.data.match);
+      }
+      
+      // Update player scores from the response
+      if (response.data.playerMatch) {
+        const { playerId, playerScore } = response.data.playerMatch;
+        
+        // Update the specific player's score
+        if (teamNumber === 1) {
+          const updatedPlayers = team1Players.map(player => {
+            if (player.playerId === playerId) {
+              return { ...player, goals: playerScore };
+            }
+            return player;
+          });
+          setTeam1Players(updatedPlayers);
+        } else {
+          const updatedPlayers = team2Players.map(player => {
+            if (player.playerId === playerId) {
+              return { ...player, goals: playerScore };
+            }
+            return player;
+          });
+          setTeam2Players(updatedPlayers);
+        }
+      }
+      
+      // Also update team scores if they're in the response
+      if (response.data.scoringTeam && response.data.concedingTeam) {
+        if (teamNumber === 1 && response.data.scoringTeam.teamId === team1.uuid) {
+          setTeam1({...team1, score: response.data.scoringTeam.score});
+          setTeam2({...team2, conceded: response.data.concedingTeam.conceded});
+        } else if (teamNumber === 2 && response.data.scoringTeam.teamId === team2.uuid) {
+          setTeam2({...team2, score: response.data.scoringTeam.score});
+          setTeam1({...team1, conceded: response.data.concedingTeam.conceded});
+        }
+      }
+      
     } catch (err) {
-      console.error("Error updating match outcome:", err);
+      console.error("Error updating score:", err);
     }
+  };
+
+  const determineMatchOutcome = () => {
+    if (!match) return { outcome: null, message: '' };
+    
+    const team1Score = match.totalGoalsTeam1 || 0;
+    const team2Score = match.totalGoalsTeam2 || 0;
+    
+    // First try to use the server-provided outcome
+    if (match.matchOutcome) {
+      if (match.matchOutcome === 'team1') {
+        return { 
+          outcome: 'team1',
+          message: `${team1?.teamName || 'Team 1'} won the match!`
+        };
+      } else if (match.matchOutcome === 'team2') {
+        return {
+          outcome: 'team2',
+          message: `${team2?.teamName || 'Team 2'} won the match!`
+        };
+      } else if (match.matchOutcome === 'tie') {
+        return {
+          outcome: 'tie',
+          message: 'The match ended in a tie!'
+        };
+      }
+    }
+    
+    // If server didn't provide a proper outcome, determine it from scores
+    if (team1Score > team2Score) {
+      return {
+        outcome: 'team1',
+        message: `${team1?.teamName || 'Team 1'} won the match!`
+      };
+    } else if (team2Score > team1Score) {
+      return {
+        outcome: 'team2',
+        message: `${team2?.teamName || 'Team 2'} won the match!`
+      };
+    } else {
+      return {
+        outcome: 'tie',
+        message: 'The match ended in a tie!'
+      };
+    }
+  };
+
+  // New function to handle navigation back to the scorer dashboard
+  const handleBackToScorer = () => {
+    navigate('/dashboard/scorer');
   };
 
   if (loading) {
@@ -269,6 +264,9 @@ const MatchDetails = () => {
     return <div className="text-center p-8">Match not found or error loading match details.</div>;
   }
 
+  // Determine result for display purposes
+  const matchResult = determineMatchOutcome();
+
   return (
     <div className="p-6 bg-white shadow-md rounded-md max-w-6xl mx-auto">
       {/* Tournament and Match Header */}
@@ -278,27 +276,26 @@ const MatchDetails = () => {
           {team1 ? team1.teamName : 'Team 1'} vs {team2 ? team2.teamName : 'Team 2'}
         </p>
         <div className="grid grid-cols-2">
-        <div className="flex justify-center items-center space-x-8 mb-4">
-          <div className="text-center">
-            <p className="text-gray-600">Team 1</p>
-            <p className="text-4xl font-bold">{match.totalGoalsTeam1}</p>
+          <div className="flex justify-center items-center space-x-8 mb-4">
+            <div className="text-center">
+              <p className="text-gray-600">Team 1</p>
+              <p className="text-4xl font-bold">{match.totalGoalsTeam1 || 0}</p>
+            </div>
+            <div className="text-center">
+              <p className="text-gray-600">Team 2</p>
+              <p className="text-4xl font-bold">{match.totalGoalsTeam2 || 0}</p>
+            </div>
           </div>
-          <div className="text-center">
-            <p className="text-gray-600">Team 2</p>
-            <p className="text-4xl font-bold">{match.totalGoalsTeam2}</p>
+          <div className="flex justify-center items-center space-x-8 mb-4">
+            <div className="text-center">
+              <p className="text-gray-600">Half Time</p>
+              <p className="text-2xl font-bold">{match.halfTime || '-'}</p>
+            </div>
+            <div className="text-center">
+              <p className="text-gray-600">Break Time</p>
+              <p className="text-2xl font-bold">{match.breakTime || '-'}</p>
+            </div>
           </div>
-        </div>
-        <div className="flex justify-center items-center space-x-8 mb-4">
-          <div className="text-center">
-            <p className="text-gray-600">Half Time</p>
-            <p className="text-2xl font-bold">{match.halfTime}</p>
-          </div>
-          <div className="text-center">
-            <p className="text-gray-600">Break Time</p>
-            <p className="text-2xl font-bold">{match.breakTime}</p>
-          </div>
-        </div>
-
         </div>
       </div>
 
@@ -322,12 +319,9 @@ const MatchDetails = () => {
             </select>
           </div>
           
-          {/* Timer Display */}
+          {/* Status Display */}
           <div className="text-center">
             <p className="text-sm font-medium mb-1">{statusMessage}</p>
-            <div className="text-2xl font-mono bg-black text-white px-4 py-2 rounded">
-              {formatTime(timer)}
-            </div>
           </div>
           
           {/* Quick Action Buttons */}
@@ -405,7 +399,7 @@ const MatchDetails = () => {
               </thead>
               <tbody>
                 {team1Players.map((player, index) => (
-                  <tr key={index} className="border-b hover:bg-gray-50">
+                  <tr key={player.playerId || index} className="border-b hover:bg-gray-50">
                     <td className="py-2 px-3">{player.jerseyNumber || '-'}</td>
                     <td className="py-2 px-3">{player.name || player.playerName || 'Player'}</td>
                     <td className="py-2 px-3 text-center font-medium">{player.goals}</td>
@@ -454,7 +448,7 @@ const MatchDetails = () => {
               </thead>
               <tbody>
                 {team2Players.map((player, index) => (
-                  <tr key={player.id || index} className="border-b hover:bg-gray-50">
+                  <tr key={player.playerId || index} className="border-b hover:bg-gray-50">
                     <td className="py-2 px-3">{player.jerseyNumber || '-'}</td>
                     <td className="py-2 px-3">{player.name || player.playerName || 'Player'}</td>
                     <td className="py-2 px-3 text-center font-medium">{player.goals}</td>
@@ -495,15 +489,18 @@ const MatchDetails = () => {
           <h3 className="text-xl font-semibold mb-2 text-center">Match Result</h3>
           <div className="text-center">
             <div className="text-lg">
-              <span className="font-bold">{team1 ? team1.teamName : 'Team 1'}</span> {match.totalGoalsTeam1} - {match.totalGoalsTeam2} <span className="font-bold">{team2 ? team2.teamName : 'Team 2'}</span>
+              <span className="font-bold">{team1 ? team1.teamName : 'Team 1'}</span> {match.totalGoalsTeam1 || 0} - {match.totalGoalsTeam2 || 0} <span className="font-bold">{team2 ? team2.teamName : 'Team 2'}</span>
             </div>
             <p className="mt-2 text-gray-700">
-              {match.matchOutcome === 'team1' 
-                ? `${team1 ? team1.teamName : 'Team 1'} won the match!` 
-                : match.matchOutcome === 'team2' 
-                  ? `${team2 ? team2.teamName : 'Team 2'} won the match!` 
-                  : 'The match ended in a tie!'}
+              {matchResult.message}
             </p>
+            {/* Back button - only appears when match is ended */}
+            <button 
+              className="mt-4 bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
+              onClick={handleBackToScorer}
+            >
+              Back to Dashboard
+            </button>
           </div>
         </div>
       )}
