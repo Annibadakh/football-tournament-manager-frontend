@@ -8,6 +8,7 @@ const Sidebar = ({ isSidebarOpen, clickSidebar, userRole }) => {
         { path: "addteam", label: "Add Team", role: "admin"},
         { path: "addplayers", label: "Add Players", role: "captain"},
         { path: "addmatches", label: "Add Matches", role: "admin"},
+        { path: "scorer", label: "Match", role: "scorer"},
     ];
 
   const isActive = (path) => location.pathname === path;

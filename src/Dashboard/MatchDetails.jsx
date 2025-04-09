@@ -189,6 +189,16 @@ const MatchDetails = () => {
   };
 
   const handleScoreChange = (teamNumber, playerIndex, change) => {
+    
+    const ScoreData = {
+      playerId: team1Players[playerIndex].playerId,
+      playerNAme: team1Players[playerIndex].name,
+      MatchId: match.id,
+      scoreId: team1.uuid,
+      conceded: team2.uuid,
+      change: change
+    }
+    console.log(ScoreData);
     if (teamNumber === 1) {
       const updatedPlayers = [...team1Players];
       updatedPlayers[playerIndex].goals = Math.max(0, updatedPlayers[playerIndex].goals + change);
@@ -262,11 +272,12 @@ const MatchDetails = () => {
   return (
     <div className="p-6 bg-white shadow-md rounded-md max-w-6xl mx-auto">
       {/* Tournament and Match Header */}
-      <div className="text-center mb-6">
-        <h2 className="text-2xl font-bold mb-1">{tournamentName}</h2>
-        <p className="text-lg mb-4">
+      <div className="text-center mb-2">
+        <h2 className="text-2xl font-bold mb-4">{tournamentName}</h2>
+        <p className="text-2xl mb-4">
           {team1 ? team1.teamName : 'Team 1'} vs {team2 ? team2.teamName : 'Team 2'}
         </p>
+        <div className="grid grid-cols-2">
         <div className="flex justify-center items-center space-x-8 mb-4">
           <div className="text-center">
             <p className="text-gray-600">Team 1</p>
@@ -276,6 +287,18 @@ const MatchDetails = () => {
             <p className="text-gray-600">Team 2</p>
             <p className="text-4xl font-bold">{match.totalGoalsTeam2}</p>
           </div>
+        </div>
+        <div className="flex justify-center items-center space-x-8 mb-4">
+          <div className="text-center">
+            <p className="text-gray-600">Half Time</p>
+            <p className="text-2xl font-bold">{match.halfTime}</p>
+          </div>
+          <div className="text-center">
+            <p className="text-gray-600">Break Time</p>
+            <p className="text-2xl font-bold">{match.breakTime}</p>
+          </div>
+        </div>
+
         </div>
       </div>
 
@@ -382,7 +405,7 @@ const MatchDetails = () => {
               </thead>
               <tbody>
                 {team1Players.map((player, index) => (
-                  <tr key={player.id || index} className="border-b hover:bg-gray-50">
+                  <tr key={index} className="border-b hover:bg-gray-50">
                     <td className="py-2 px-3">{player.jerseyNumber || '-'}</td>
                     <td className="py-2 px-3">{player.name || player.playerName || 'Player'}</td>
                     <td className="py-2 px-3 text-center font-medium">{player.goals}</td>
