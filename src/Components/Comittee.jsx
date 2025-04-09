@@ -5,6 +5,10 @@ import demo from "./Images/dummy.jpg";
 import pankaj from "./Images/pankaj.jpg";
 import aniket from "./Images/image.jpg";
 import kunal from "./Images/kunal.jpg";
+import rishi from "./Images/rishi.jpg";
+import shubham from "./Images/shubham.jpg";
+import kulkarni from "./Images/kulkarni.jpg";
+import moti from "./Images/moti.png";
 
 const committeeMembers = [
   {
@@ -20,7 +24,7 @@ const committeeMembers = [
   {
     name: 'Dr. Makrand Kulkarni',
     post: 'Dean SAC',
-    image: `${demo}`,
+    image: `${kulkarni}`,
   },
   {
     name: 'Dr. Ganesh Narode',
@@ -40,7 +44,7 @@ const committeeMembers = [
   {
     name: 'Moti Kumar Sir',
     post: 'Coach',
-    image: `${demo}`,
+    image: `${moti}`,
   },
   {
     name: 'Atharva Bhadane',
@@ -49,7 +53,7 @@ const committeeMembers = [
   },{
     name: 'Rushikesh Gadhave',
     post: 'President',
-    image: `${demo}`,
+    image: `${rishi}`,
   },{
     name: 'Aniket Badakh',
     post: 'Vice-President',
@@ -76,7 +80,7 @@ const committeeMembers = [
   {
     name: 'Shubham Kadam',
     post: 'Event Coordinator',
-    image: `${demo}`,
+    image: `${shubham}`,
   },
 ];
 
