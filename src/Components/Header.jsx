@@ -40,7 +40,9 @@ const Header = () => {
       </div>
 
       {/* Hamburger Icon */}
+      <h2 className="md:hidden color-black">Football Tournament Manager</h2>
       <div className="md:hidden">
+        
         <button onClick={toggleMenu}>
           {isOpen ? <X size={28} /> : <Menu size={28} />}
         </button>
