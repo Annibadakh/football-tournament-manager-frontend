@@ -12,10 +12,11 @@ function Login() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if(user){
+    if (user) {
       navigate('/dashboard');
     }
-  }, [navigate]);
+  }, [user, navigate]);
+
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -28,7 +29,7 @@ function Login() {
       login(response.data);
       navigate("/dashboard");
     } catch (error) {
-      alert(error.response.data.message);
+      alert(error.response?.data?.message || "Login failed");
       console.error("Login failed:", error.response);
     }
   };
@@ -72,12 +73,21 @@ function Login() {
               <option value="admin">Admin</option>
             </select>
           </div>
-          <button
-            type="submit"
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg"
-          >
-            Login
-          </button>
+          <div className="flex justify-between">
+            <button
+              type="button"
+              onClick={() => navigate('/')}
+              className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg"
+            >
+              Back to Home 
+            </button>
+            <button
+              type="submit"
+              className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg"
+            >
+              Login
+            </button>
+          </div>
         </form>
       </div>
     </div>

@@ -9,7 +9,6 @@ const Home = () => {
       <div>
         <img src={poster}></img>
       </div>
-      <Comittee />
     </div>
   );
 };
