@@ -176,7 +176,7 @@ const Matches = () => {
                 <th className="py-3 px-4 text-left border-b">Status</th>
                 <th className="py-3 px-4 text-left border-b">Score</th>
                 <th className="py-3 px-4 text-left border-b">Outcome</th>
-                <th className="py-3 px-4 text-left border-b">Details</th>
+                {/* <th className="py-3 px-4 text-left border-b">Details</th> */}
               </tr>
             </thead>
             <tbody>
@@ -216,13 +216,13 @@ const Matches = () => {
                   <td className="py-3 px-4">
                     {getOutcomeWithColor(match.matchOutcome, match)}
                   </td>
-                  <td className="py-3 px-4">
+                  {/* <td className="py-3 px-4">
                     <div className="text-sm">
                       <div><span className="font-medium">Referee:</span> {match.referee || 'TBD'}</div>
                       <div><span className="font-medium">Half Time:</span> {formatTime(match.halfTime)}</div>
                       <div><span className="font-medium">Break Time:</span> {formatTime(match.breakTime)}</div>
                     </div>
-                  </td>
+                  </td> */}
                 </tr>
               ))}
             </tbody>
