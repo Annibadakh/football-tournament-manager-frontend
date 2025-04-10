@@ -176,28 +176,25 @@ const Matches = () => {
                 <th className="py-3 px-4 text-left border-b">Status</th>
                 <th className="py-3 px-4 text-left border-b">Score</th>
                 <th className="py-3 px-4 text-left border-b">Outcome</th>
-                {/* <th className="py-3 px-4 text-left border-b">Details</th> */}
               </tr>
             </thead>
             <tbody>
               {matches.map((match) => (
                 <tr key={match.id} className="border-b hover:bg-gray-50">
                   <td className="py-3 px-4">
-                    <div className="flex items-center mb-2">
-                      <div className="mr-3">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-start sm:justify-between gap-2">
+                      <div className="flex items-center gap-2">
                         {renderTeamLogo(match.team1Id)}
+                        <div className="font-semibold">
+                          {teamsData[match.team1Id]?.name || 'Unknown'}
+                        </div>
                       </div>
-                      <div className="font-semibold">
-                        {teamsData[match.team1Id]?.name || 'Unknown'}
-                      </div>
-                    </div>
-                    <div className="text-xs text-gray-500 text-center my-1">vs</div>
-                    <div className="flex items-center mt-2">
-                      <div className="mr-3">
+                      <div className="text-xs text-gray-500 text-center">vs</div>
+                      <div className="flex items-center gap-2">
                         {renderTeamLogo(match.team2Id)}
-                      </div>
-                      <div className="font-semibold">
-                        {teamsData[match.team2Id]?.name || 'Unknown'}
+                        <div className="font-semibold">
+                          {teamsData[match.team2Id]?.name || 'Unknown'}
+                        </div>
                       </div>
                     </div>
                   </td>
@@ -208,21 +205,12 @@ const Matches = () => {
                   <td className="py-3 px-4">
                     {getStatusWithColor(match.status)}
                   </td>
-                  <td className="py-3 px-4">
-                    <div className="text-center font-bold text-lg">
-                      {match.totalGoalsTeam1} - {match.totalGoalsTeam2}
-                    </div>
+                  <td className="py-3 px-4 text-center font-bold text-lg">
+                    {match.totalGoalsTeam1} - {match.totalGoalsTeam2}
                   </td>
                   <td className="py-3 px-4">
                     {getOutcomeWithColor(match.matchOutcome, match)}
                   </td>
-                  {/* <td className="py-3 px-4">
-                    <div className="text-sm">
-                      <div><span className="font-medium">Referee:</span> {match.referee || 'TBD'}</div>
-                      <div><span className="font-medium">Half Time:</span> {formatTime(match.halfTime)}</div>
-                      <div><span className="font-medium">Break Time:</span> {formatTime(match.breakTime)}</div>
-                    </div>
-                  </td> */}
                 </tr>
               ))}
             </tbody>
@@ -239,6 +227,7 @@ const Matches = () => {
       )}
     </div>
   );
+  
 };
 
 export default Matches;

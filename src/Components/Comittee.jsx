@@ -27,6 +27,15 @@ const committeeMembers = [
     image: `${kulkarni}`,
   },
   {
+    name: 'Dr. M. A. Jawale',
+    post: 'Hod - IT',
+    image: `${demo}`,
+  },{
+    name: 'Dr. R. A. Kapgate',
+    post: 'Hod - MTRX',
+    image: `${demo}`,
+  },
+  {
     name: 'Dr. Ganesh Narode',
     post: 'Pyhsical Director',
     image: `${demo}`,
@@ -68,7 +77,7 @@ const committeeMembers = [
     image: `${demo}`,
   },
   {
-    name: 'Yash',
+    name: 'Yash Shinde',
     post: 'Social Media Handler',
     image: `${demo}`,
   },
