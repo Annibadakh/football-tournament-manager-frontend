@@ -9,6 +9,7 @@ const PointsTable = () => {
   const [selectedTournament, setSelectedTournament] = useState("");
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [topScorers, setTopScorers] = useState([]);
 
   // Fetch all tournaments on component mount
   useEffect(() => {
@@ -55,6 +56,9 @@ const PointsTable = () => {
         });
         
         setTeams(sortedTeams);
+
+        const scorersRes = await axios.get(`${apiUrl}/player/top-scorers/`);
+      setTopScorers(scorersRes.data);
       } catch (error) {
         console.error("Error fetching teams:", error);
         setTeams([]);
@@ -211,6 +215,37 @@ const PointsTable = () => {
               <p className="text-gray-500 text-sm mt-2">This could be because no teams have joined yet or the tournament hasn't started.</p>
             </div>
           )}
+
+{topScorers.length > 0 && (
+  <div className="mt-10">
+    <h2 className="text-xl font-semibold mb-4 text-center">Top 3 Goal Scorers</h2>
+    <div className="grid md:grid-cols-3 gap-6">
+      {topScorers.map((player, idx) => (
+        <div
+          key={player.playerId}
+          className="bg-white shadow-lg rounded-xl p-4 flex items-center space-x-4"
+        >
+          <img
+            src={`${imageUrl}${player.photoUrl}`}
+            alt={player.name}
+            className="w-16 h-16 object-cover rounded-full bg-gray-200"
+            onError={(e) => {
+              e.target.src = "/placeholder-player.png";
+            }}
+          />
+          <div>
+            <h3 className="text-lg font-bold">{player.name}</h3>
+            <p className="text-sm text-gray-600">{player.position}</p>
+            <p className="text-sm text-gray-500">Goals: {player.totalScore}</p>
+            {player.teamName && (
+              <p className="text-sm text-gray-400 italic">Team: {player.teamName}</p>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+)}
         </>
       )}
     </div>

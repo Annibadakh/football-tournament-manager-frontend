@@ -26,7 +26,6 @@ const Header = () => {
       {/* Desktop Nav Links */}
       <div className="hidden md:flex space-x-4 items-center">
         <Link to="/" className="hover:text-green-700">Home</Link>
-        <Link to="/committee" className="hover:text-green-700">Committee</Link>
 
         <Link to="/tournaments" className="hover:text-green-700">Tournaments</Link>
         <Link to="/matches" className="hover:text-green-700">Matches</Link>
@@ -52,7 +51,6 @@ const Header = () => {
       {isOpen && (
         <div className="absolute top-full right-0 w-56 bg-white shadow-md py-4 z-10 md:hidden flex flex-col items-center space-y-4">
           <Link to="/" onClick={toggleMenu} className="hover:text-green-700">Home</Link>
-          <Link to="/committee" onClick={toggleMenu} className="hover:text-green-700">Committee</Link>
           <Link to="/tournaments" onClick={toggleMenu} className="hover:text-green-700">Tournaments</Link>
           
           <Link to="/matches" onClick={toggleMenu} className="hover:text-green-700">Matches</Link>

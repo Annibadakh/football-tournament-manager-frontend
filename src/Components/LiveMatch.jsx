@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import axios from "axios";
+import LiveCommentary from "./LiveCommentary";
 
 const LiveMatch = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -12,38 +13,74 @@ const LiveMatch = () => {
   const [team2, setTeam2] = useState(null);
   const [team1Players, setTeam1Players] = useState([]);
   const [team2Players, setTeam2Players] = useState([]);
-  const [refreshInterval, setRefreshInterval] = useState(30); // seconds
   const [lastUpdated, setLastUpdated] = useState(new Date());
   const [error, setError] = useState("");
+  const intervalRef = useRef(null); // Using ref to track the interval
+  const loadingRef = useRef(false); // To prevent overlapping API calls
 
-  // Fetch all live matches
+  // This effect handles the interval setup and cleanup properly
   useEffect(() => {
-    fetchLiveMatches();
+    // Clear any existing interval first
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
     
-    // Set up polling for live updates
-    const intervalId = setInterval(() => {
-      fetchLiveMatches();
-      if (selectedMatch) {
-        fetchMatchDetails(selectedMatch.id);
+    // Initial load
+    refreshData();
+    
+    // Set up a new interval of 30 seconds
+    intervalRef.current = setInterval(() => {
+      refreshData();
+    }, 30 * 1000);
+    
+    // Cleanup on unmount
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
       }
-      setLastUpdated(new Date());
-    }, refreshInterval * 1000);
-    
-    return () => clearInterval(intervalId);
-  }, [refreshInterval, selectedMatch]);
+    };
+  }, []); // Empty dependency array - only run on mount/unmount
 
-  // When a match is selected, fetch its details
+  // Separate effect to handle selected match changes
   useEffect(() => {
-    if (selectedMatch) {
+    if (selectedMatch && selectedMatch.id) {
       fetchMatchDetails(selectedMatch.id);
     }
-  }, [selectedMatch]);
+  }, [selectedMatch?.id]); // Only run when selectedMatch.id changes
+
+  // Combined refresh function to avoid duplicate calls
+  const refreshData = async () => {
+    // Check if we're already loading data to prevent overlapping calls
+    if (loadingRef.current) return;
+    
+    loadingRef.current = true;
+    
+    try {
+      await fetchLiveMatches();
+      if (selectedMatch && selectedMatch.id) {
+        await fetchMatchDetails(selectedMatch.id);
+      }
+      setLastUpdated(new Date());
+    } catch (error) {
+      console.error("Error refreshing data:", error);
+    } finally {
+      loadingRef.current = false;
+    }
+  };
 
   const fetchLiveMatches = async () => {
     try {
-      setLoading(true);
-      // Direct axios call to the API endpoint
-      const response = await axios.get(`${apiUrl}/match/get-matches`);
+      if (!loadingRef.current) {
+        setLoading(true);
+      }
+      
+      // Use a single API call with proper caching headers
+      const response = await axios.get(`${apiUrl}/match/get-matches`, {
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache'
+        }
+      });
       
       // Filter matches that are in progress
       const activeMatches = response.data.filter(match => 
@@ -58,6 +95,12 @@ const LiveMatch = () => {
       // If no match is selected yet but live matches are available, select the first one
       if (!selectedMatch && activeMatches.length > 0) {
         setSelectedMatch(activeMatches[0]);
+      } else if (selectedMatch) {
+        // Update the selected match data if it's in the active matches
+        const updatedMatch = activeMatches.find(match => match.id === selectedMatch.id);
+        if (updatedMatch) {
+          setSelectedMatch(prev => ({...prev, ...updatedMatch}));
+        }
       }
       
       setError("");
@@ -71,30 +114,43 @@ const LiveMatch = () => {
 
   const fetchMatchDetails = async (matchId) => {
     try {
-      // Fetch match details
-      const matchRes = await axios.get(`${apiUrl}/match/get-match/${matchId}`);
+      // Batch API calls together with Promise.all for efficiency
+      const [matchRes, team1Res, team2Res] = await Promise.all([
+        axios.get(`${apiUrl}/match/get-match/${matchId}`),
+        // Only fetch team details if we don't have the IDs yet
+        !team1 || !team2 ? null : axios.get(`${apiUrl}/team/get-team/${team1.teamId}`),
+        !team1 || !team2 ? null : axios.get(`${apiUrl}/team/get-team/${team2.teamId}`)
+      ]);
+      
       const matchData = matchRes.data;
       setSelectedMatch(matchData);
       
-      // Fetch teams
-      const team1Res = await axios.get(`${apiUrl}/team/get-team/${matchData.team1Id}`);
-      const team2Res = await axios.get(`${apiUrl}/team/get-team/${matchData.team2Id}`);
-      setTeam1(team1Res.data);
-      setTeam2(team2Res.data);
+      // Only fetch team details if needed
+      if (!team1 || team1.teamId !== matchData.team1Id) {
+        const team1Response = team1Res || await axios.get(`${apiUrl}/team/get-team/${matchData.team1Id}`);
+        setTeam1(team1Response.data);
+      }
       
-      // Fetch players for both teams
-      const team1PlayersRes = await axios.get(`${apiUrl}/player/get-players/${matchData.team1Id}`);
-      const team2PlayersRes = await axios.get(`${apiUrl}/player/get-players/${matchData.team2Id}`);
+      if (!team2 || team2.teamId !== matchData.team2Id) {
+        const team2Response = team2Res || await axios.get(`${apiUrl}/team/get-team/${matchData.team2Id}`);
+        setTeam2(team2Response.data);
+      }
+      
+      // Now fetch players for both teams
+      const [team1PlayersRes, team2PlayersRes] = await Promise.all([
+        axios.get(`${apiUrl}/player/get-players/${matchData.team1Id}`),
+        axios.get(`${apiUrl}/player/get-players/${matchData.team2Id}`)
+      ]);
       
       // Set players with their goal scores
       setTeam1Players(team1PlayersRes.data.map(player => ({
         ...player,
-        goals: player.goals || 0 // Use existing goal data if available
+        goals: player.goals || 0
       })));
       
       setTeam2Players(team2PlayersRes.data.map(player => ({
         ...player,
-        goals: player.goals || 0 // Use existing goal data if available
+        goals: player.goals || 0
       })));
       
       setError("");
@@ -177,12 +233,7 @@ const LiveMatch = () => {
         <div className="text-center p-10 bg-gray-50 rounded-md">
           <p className="text-lg text-gray-600">No live matches currently in progress.</p>
           <p className="mt-2 text-sm text-gray-500">Please check back later.</p>
-          <button 
-            onClick={fetchLiveMatches} 
-            className="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
-          >
-            Refresh
-          </button>
+          <p className="mt-2 text-xs text-gray-500">Data refreshes automatically every 30 seconds.</p>
         </div>
       </div>
     );
@@ -193,22 +244,16 @@ const LiveMatch = () => {
       <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Live Matches</h1>
         <div className="text-sm text-gray-500 mt-2 sm:mt-0">
-          Last updated: {formatLastUpdated()}
-          <button 
-            onClick={fetchLiveMatches} 
-            className="ml-2 text-blue-600 hover:text-blue-800"
-          >
-            Refresh
-          </button>
-          <select 
-            className="ml-4 border rounded px-2 py-1 text-sm"
-            value={refreshInterval}
-            onChange={(e) => setRefreshInterval(Number(e.target.value))}
-          >
-            <option value="10">Refresh: 10s</option>
-            <option value="30">Refresh: 30s</option>
-            <option value="60">Refresh: 1m</option>
-          </select>
+          <div className="flex items-center">
+            <span>Last updated: {formatLastUpdated()}</span>
+            <div className="ml-4 flex items-center">
+              <span className="animate-pulse text-xs text-green-600">●</span>
+              <span className="ml-1">Auto-refreshing</span>
+            </div>
+          </div>
+          <div className="text-xs text-amber-600 mt-1">
+            This is a free hosted service. Data refreshes automatically every 30 seconds.
+          </div>
         </div>
       </div>
 
@@ -236,6 +281,7 @@ const LiveMatch = () => {
 
       {selectedMatch && (
         <>
+          {/* <LiveCommentary /> */}
           {/* Match Header with Score */}
           <div className="bg-gray-50 p-6 rounded-lg mb-6">
             <div className="text-center">
@@ -265,7 +311,7 @@ const LiveMatch = () => {
                 {renderTeamLogo(team2, team2?.teamName || 'Team 2')}
               </div>
               
-              <div className="grid grid-cols-2 gap-8 max-w-md mx-auto">
+              {/* <div className="grid grid-cols-2 gap-8 max-w-md mx-auto">
                 <div className="text-center">
                   <p className="text-sm text-gray-600">Half Time Score</p>
                   <p className="text-xl font-medium">{selectedMatch.halfTime || '-'}</p>
@@ -276,14 +322,14 @@ const LiveMatch = () => {
                     {selectedMatch.matchTime || '-'}
                   </p>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
 
           {/* Players Tables */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Team 1 Players */}
-            <div>
+            {/* <div>
               <h3 className="text-xl font-semibold mb-3">{team1?.teamName || 'Team 1'}</h3>
               <div className="overflow-auto max-h-96">
                 <table className="min-w-full bg-white border">
@@ -317,10 +363,10 @@ const LiveMatch = () => {
                   </tbody>
                 </table>
               </div>
-            </div>
+            </div> */}
             
             {/* Team 2 Players */}
-            <div>
+            {/* <div>
               <h3 className="text-xl font-semibold mb-3">{team2?.teamName || 'Team 2'}</h3>
               <div className="overflow-auto max-h-96">
                 <table className="min-w-full bg-white border">
@@ -354,11 +400,11 @@ const LiveMatch = () => {
                   </tbody>
                 </table>
               </div>
-            </div>
+            </div> */}
           </div>
 
           {/* Top Scorers Section */}
-          <div className="mt-8">
+          {/* <div className="mt-8">
             <h3 className="text-xl font-semibold mb-3">Match Top Scorers</h3>
             <div className="bg-gray-50 p-4 rounded-md">
               {(() => {
@@ -399,7 +445,8 @@ const LiveMatch = () => {
                 );
               })()}
             </div>
-          </div>
+          </div> */}
+         
         </>
       )}
     </div>

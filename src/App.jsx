@@ -17,7 +17,6 @@ import Matches from "./Components/Matches";
 import PointsTable from "./Components/PointsTable ";
 import Scorer from "./Dashboard/Scorer";
 import MatchDetails from "./Dashboard/MatchDetails";
-import Comittee from "./Components/Comittee";
 
 function App() {
   return (
@@ -26,7 +25,6 @@ function App() {
         <Routes>
           <Route path="/" element={<Main />}>
           <Route index element={<Home2 />} />
-          <Route path="committee" element={<Comittee />} />
           <Route path="tournaments" element={<Tournaments />} />
           <Route path="team/:id" element={<TeamPage />} />
           <Route path="live" element={<LiveMatch />} />

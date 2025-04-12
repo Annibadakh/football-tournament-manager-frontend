@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import api from "../Api";
+import TeamOperations from "./TeamOperations";
 
 const MatchDetails = () => {
   const { matchId } = useParams();
@@ -479,8 +480,13 @@ const MatchDetails = () => {
                 )}
               </tbody>
             </table>
+            
           </div>
+          
         </div>
+
+        {/* <TeamOperations team1= {team1.teamName} team2 = {team2.teamName}/> */}
+
       </div>
 
       {/* Match Result (shown when match is ended) */}
