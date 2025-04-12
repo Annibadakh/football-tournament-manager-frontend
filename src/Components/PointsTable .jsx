@@ -218,7 +218,7 @@ const PointsTable = () => {
 
 {topScorers.length > 0 && (
   <div className="mt-10">
-    <h2 className="text-xl font-semibold mb-4 text-center">Top 3 Goal Scorers</h2>
+    <h2 className="text-xl font-semibold mb-4 text-center">Top 4 Goal Scorers</h2>
     <div className="grid md:grid-cols-3 gap-6">
       {topScorers.map((player, idx) => (
         <div
