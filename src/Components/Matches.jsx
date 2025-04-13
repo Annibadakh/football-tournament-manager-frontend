@@ -169,15 +169,16 @@ const Matches = () => {
       ) : selectedTournamentId && matches.length > 0 ? (
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border border-gray-200">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="py-3 px-4 text-left border-b">Teams</th>
-                <th className="py-3 px-4 text-left border-b">Date & Time</th>
-                <th className="py-3 px-4 text-left border-b">Status</th>
-                <th className="py-3 px-4 text-left border-b">Score</th>
-                <th className="py-3 px-4 text-left border-b">Outcome</th>
-              </tr>
-            </thead>
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="py-3 px-4 text-left border-b">Teams</th>
+              <th className="py-3 px-4 text-left border-b">Date & Time</th>
+              <th className="py-3 px-4 text-left border-b">Stage</th>
+              <th className="py-3 px-4 text-left border-b">Status</th>
+              <th className="py-3 px-4 text-left border-b">Score</th>
+              <th className="py-3 px-4 text-left border-b">Outcome</th>
+            </tr>
+          </thead>
             <tbody>
               {matches.map((match) => (
                 <tr key={match.id} className="border-b hover:bg-gray-50">
@@ -201,6 +202,9 @@ const Matches = () => {
                   <td className="py-3 px-4">
                     <div>{formatDate(match.startDate)}</div>
                     <div className="text-sm text-gray-600">{formatTime(match.startTime)}</div>
+                  </td>
+                  <td className="py-3 px-4 capitalize font-medium text-sm text-gray-700">
+                    {match.stage || 'N/A'}
                   </td>
                   <td className="py-3 px-4">
                     {getStatusWithColor(match.status)}

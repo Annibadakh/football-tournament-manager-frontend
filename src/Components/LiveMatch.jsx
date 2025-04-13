@@ -175,6 +175,29 @@ const LiveMatch = () => {
     }
   };
 
+  const getStageText = (stage) => {
+    switch (stage) {
+      case 'league-stage':
+        return "League Stage";
+      case 'group-stage':
+        return "Group Stage";
+      case 'round-of-16':
+        return "Round of 16";
+      case 'quarterfinals':
+        return "Quarterfinals";
+      case 'semifinals':
+        return "Semifinals";
+      case 'finals':
+        return "Finals";
+      case 'third-place':
+        return "Third Place Match";
+      default:
+        return stage ? stage.split('-').map(word => 
+          word.charAt(0).toUpperCase() + word.slice(1)
+        ).join(' ') : "League Match";
+    }
+  };
+
   const formatLastUpdated = () => {
     return lastUpdated.toLocaleTimeString();
   };
@@ -273,6 +296,11 @@ const LiveMatch = () => {
                 }`}
               >
                 {match.team1Name || 'Team 1'} vs {match.team2Name || 'Team 2'}
+                {match.stage && (
+                  <span className="ml-2 text-xs px-2 py-1 bg-gray-700 bg-opacity-20 rounded-full">
+                    {getStageText(match.stage)}
+                  </span>
+                )}
               </button>
             ))}
           </div>
@@ -285,7 +313,7 @@ const LiveMatch = () => {
           {/* Match Header with Score */}
           <div className="bg-gray-50 p-6 rounded-lg mb-6">
             <div className="text-center">
-              <div className="mb-2">
+              <div className="mb-2 flex flex-col sm:flex-row items-center justify-center gap-2">
                 <span className={`inline-block px-3 py-1 text-sm font-semibold rounded-full ${
                   selectedMatch.status === 'started' 
                     ? 'bg-red-100 text-red-800 animate-pulse' 
@@ -293,6 +321,12 @@ const LiveMatch = () => {
                 }`}>
                   {getStatusText(selectedMatch.status)}
                 </span>
+                
+                {selectedMatch.stage && (
+                  <span className="inline-block px-3 py-1 text-sm font-semibold rounded-full bg-blue-100 text-blue-800">
+                    {getStageText(selectedMatch.stage)}
+                  </span>
+                )}
               </div>
               
               <h2 className="text-2xl font-bold mb-6">

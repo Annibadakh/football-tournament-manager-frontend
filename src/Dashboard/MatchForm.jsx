@@ -8,6 +8,7 @@ const MatchForm = () => {
   const [team1, setTeam1] = useState("");
   const [team2, setTeam2] = useState("");
   const [existingMatches, setExistingMatches] = useState([]);
+  const [stage, setStage] = useState("");
   const [matchInfo, setMatchInfo] = useState({
     startDate: "",
     startTime: "",
@@ -69,6 +70,7 @@ const MatchForm = () => {
       tournamentId: selectedTournamentId,
       team1Id: team1,
       team2Id: team2,
+      stage,
       ...matchInfo,
     };
 
@@ -82,6 +84,7 @@ const MatchForm = () => {
       // Reset form fields
       setTeam1("");
       setTeam2("");
+      setStage("");
       setMatchInfo({
         startDate: "",
         startTime: "",
@@ -229,6 +232,21 @@ const MatchForm = () => {
                   placeholder="e.g. 10"
                   required
                 />
+              </div>
+              <div className="mb-3">
+                <label className="block font-semibold mb-1">Select Stage</label>
+                <select
+                  className="w-full border px-3 py-2 rounded"
+                  value={stage}
+                  onChange={(e) => setStage(e.target.value)}
+                  required
+                >
+                  <option value="">-- Select Stage --</option>
+                  <option value="league-stage">League Stage</option>
+                  <option value="quarter-final">Quarterfinal</option>
+                  <option value="semi-final">Semifinal</option>
+                  <option value="final">Final</option>
+                </select>
               </div>
 
               <div className="text-right">
