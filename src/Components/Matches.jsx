@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
-import api from "../Api";
 import axios from "axios";
 
 const Matches = () => {
-    const imgUrl = import.meta.env.VITE_IMAGE_URL;
+  const imgUrl = import.meta.env.VITE_IMAGE_URL;
   const apiUrl = import.meta.env.VITE_API_URL;
   const [tournaments, setTournaments] = useState([]);
   const [selectedTournamentId, setSelectedTournamentId] = useState("");
@@ -33,7 +32,10 @@ const Matches = () => {
     try {
       // Fetch matches for the selected tournament
       const matchesRes = await axios.get(`${apiUrl}/match/get-matches/${id}`);
-      setMatches(matchesRes.data);
+      
+      // Sort matches by status (pending first) and then by date/time
+      const sortedMatches = sortMatches(matchesRes.data);
+      setMatches(sortedMatches);
       
       // Fetch teams for the selected tournament to get team names and logos
       const teamsRes = await axios.get(`${apiUrl}/team/get-teams/${id}`);
@@ -52,6 +54,30 @@ const Matches = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Sort matches: pending first, then other statuses, then by date and time
+  const sortMatches = (matchesList) => {
+    // Define status priority (lower number = higher priority)
+    const statusPriority = {
+      'pending': 1,
+      'started': 2,
+      'half-time': 3,
+      'break': 4,
+      'paused': 5,
+      'ended': 6
+    };
+
+    return [...matchesList].sort((a, b) => {
+      // First, sort by status priority
+      const statusComparison = (statusPriority[a.status] || 999) - (statusPriority[b.status] || 999);
+      if (statusComparison !== 0) return statusComparison;
+      
+      // If same status, sort by date and time
+      const dateA = new Date(`${a.startDate}T${a.startTime || '00:00:00'}`);
+      const dateB = new Date(`${b.startDate}T${b.startTime || '00:00:00'}`);
+      return dateA - dateB;
+    });
   };
 
   // Helper function to get match status with color code
@@ -169,16 +195,16 @@ const Matches = () => {
       ) : selectedTournamentId && matches.length > 0 ? (
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border border-gray-200">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="py-3 px-4 text-left border-b">Teams</th>
-              <th className="py-3 px-4 text-left border-b">Date & Time</th>
-              <th className="py-3 px-4 text-left border-b">Stage</th>
-              <th className="py-3 px-4 text-left border-b">Status</th>
-              <th className="py-3 px-4 text-left border-b">Score</th>
-              <th className="py-3 px-4 text-left border-b">Outcome</th>
-            </tr>
-          </thead>
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="py-3 px-4 text-left border-b">Teams</th>
+                <th className="py-3 px-4 text-left border-b">Date & Time</th>
+                <th className="py-3 px-4 text-left border-b">Stage</th>
+                <th className="py-3 px-4 text-left border-b">Status</th>
+                <th className="py-3 px-4 text-left border-b">Score</th>
+                <th className="py-3 px-4 text-left border-b">Outcome</th>
+              </tr>
+            </thead>
             <tbody>
               {matches.map((match) => (
                 <tr key={match.id} className="border-b hover:bg-gray-50">
@@ -231,7 +257,6 @@ const Matches = () => {
       )}
     </div>
   );
-  
 };
 
 export default Matches;
