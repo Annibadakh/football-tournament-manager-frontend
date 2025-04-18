@@ -142,16 +142,48 @@ const LiveMatch = () => {
         axios.get(`${apiUrl}/player/get-players/${matchData.team2Id}`)
       ]);
       
-      // Set players with their goal scores
-      setTeam1Players(team1PlayersRes.data.map(player => ({
-        ...player,
-        goals: player.goals || 0
-      })));
+      const team1PlayersData = team1PlayersRes.data;
+      const team2PlayersData = team2PlayersRes.data;
       
-      setTeam2Players(team2PlayersRes.data.map(player => ({
-        ...player,
-        goals: player.goals || 0
-      })));
+      // Fetch player scores for each player using the new endpoint
+      const team1PlayersWithScores = await Promise.all(
+        team1PlayersData.map(async (player) => {
+          try {
+            const scoreRes = await axios.get(`${apiUrl}/match/match-player/${matchId}/${player.playerId}`);
+            return {
+              ...player,
+              goals: scoreRes.data.playerScore || 0
+            };
+          } catch (err) {
+            console.error(`Error fetching score for player ${player.playerId}:`, err);
+            return {
+              ...player,
+              goals: 0
+            };
+          }
+        })
+      );
+      
+      const team2PlayersWithScores = await Promise.all(
+        team2PlayersData.map(async (player) => {
+          try {
+            const scoreRes = await axios.get(`${apiUrl}/match/match-player/${matchId}/${player.playerId}`);
+            return {
+              ...player,
+              goals: scoreRes.data.playerScore || 0
+            };
+          } catch (err) {
+            console.error(`Error fetching score for player ${player.playerId}:`, err);
+            return {
+              ...player,
+              goals: 0
+            };
+          }
+        })
+      );
+      
+      setTeam1Players(team1PlayersWithScores);
+      setTeam2Players(team2PlayersWithScores);
       
       setError("");
     } catch (err) {
@@ -309,7 +341,6 @@ const LiveMatch = () => {
 
       {selectedMatch && (
         <>
-          {/* <LiveCommentary /> */}
           {/* Match Header with Score */}
           <div className="bg-gray-50 p-6 rounded-lg mb-6">
             <div className="text-center">
@@ -344,26 +375,13 @@ const LiveMatch = () => {
                 
                 {renderTeamLogo(team2, team2?.teamName || 'Team 2')}
               </div>
-              
-              {/* <div className="grid grid-cols-2 gap-8 max-w-md mx-auto">
-                <div className="text-center">
-                  <p className="text-sm text-gray-600">Half Time Score</p>
-                  <p className="text-xl font-medium">{selectedMatch.halfTime || '-'}</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-sm text-gray-600">Match Time</p>
-                  <p className="text-xl font-medium">
-                    {selectedMatch.matchTime || '-'}
-                  </p>
-                </div>
-              </div> */}
             </div>
           </div>
 
           {/* Players Tables */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Team 1 Players */}
-            {/* <div>
+            <div>
               <h3 className="text-xl font-semibold mb-3">{team1?.teamName || 'Team 1'}</h3>
               <div className="overflow-auto max-h-96">
                 <table className="min-w-full bg-white border">
@@ -397,10 +415,10 @@ const LiveMatch = () => {
                   </tbody>
                 </table>
               </div>
-            </div> */}
+            </div>
             
             {/* Team 2 Players */}
-            {/* <div>
+            <div>
               <h3 className="text-xl font-semibold mb-3">{team2?.teamName || 'Team 2'}</h3>
               <div className="overflow-auto max-h-96">
                 <table className="min-w-full bg-white border">
@@ -434,11 +452,11 @@ const LiveMatch = () => {
                   </tbody>
                 </table>
               </div>
-            </div> */}
+            </div>
           </div>
 
           {/* Top Scorers Section */}
-          {/* <div className="mt-8">
+          <div className="mt-8">
             <h3 className="text-xl font-semibold mb-3">Match Top Scorers</h3>
             <div className="bg-gray-50 p-4 rounded-md">
               {(() => {
@@ -479,8 +497,7 @@ const LiveMatch = () => {
                 );
               })()}
             </div>
-          </div> */}
-         
+          </div>
         </>
       )}
     </div>
