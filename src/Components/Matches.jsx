@@ -1,14 +1,20 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
+import { useAuth } from "../Context/AuthContext";
 
 const Matches = () => {
+  const {user} = useAuth();
   const imgUrl = import.meta.env.VITE_IMAGE_URL;
   const apiUrl = import.meta.env.VITE_API_URL;
   const [tournaments, setTournaments] = useState([]);
   const [selectedTournamentId, setSelectedTournamentId] = useState("");
+  const [selectedTournamentName, setSelectedTournamentName] = useState("");
   const [matches, setMatches] = useState([]);
   const [teamsData, setTeamsData] = useState({});
   const [loading, setLoading] = useState(false);
+  const [generatingPdf, setGeneratingPdf] = useState(false);
 
   useEffect(() => {
     // Fetch tournaments on component mount
@@ -27,6 +33,10 @@ const Matches = () => {
     const id = e.target.value;
     setSelectedTournamentId(id);
     if (!id) return;
+    
+    // Find selected tournament name
+    const tournament = tournaments.find(t => t.uuid === id);
+    setSelectedTournamentName(tournament?.name || "Selected Tournament");
     
     setLoading(true);
     try {
@@ -56,7 +66,7 @@ const Matches = () => {
     }
   };
 
-  // Sort matches: pending first, then other statuses, then by date and time
+  // Sort matches
   const sortMatches = (matchesList) => {
     // Define status priority (lower number = higher priority)
     const statusPriority = {
@@ -78,6 +88,57 @@ const Matches = () => {
       const dateB = new Date(`${b.startDate}T${b.startTime || '00:00:00'}`);
       return dateA - dateB;
     });
+  };
+
+  // Generate PDF function
+  const generatePDF = async () => {
+    if (!matches.length) return;
+    
+    setGeneratingPdf(true);
+    try {
+      // Create PDF document
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      
+      // Add tournament title
+      pdf.setFontSize(20);
+      pdf.setTextColor(0, 0, 0);
+      pdf.text(selectedTournamentName, pageWidth / 2, 20, { align: 'center' });
+      
+      // Add date
+      pdf.setFontSize(12);
+      pdf.setTextColor(100, 100, 100);
+      const today = new Date().toLocaleDateString();
+      // pdf.text(`Generated on: ${today}`, pageWidth / 2, 30, { align: 'center' });
+      
+      // Get the matches table content
+      const content = document.getElementById('matches-table-container');
+      
+      // Convert the HTML content to canvas
+      const canvas = await html2canvas(content, {
+        scale: 1,
+        useCORS: true,
+        allowTaint: true,
+        logging: false
+      });
+      
+      // Add the canvas as image to PDF
+      const imgData = canvas.toDataURL('image/png');
+      const imgWidth = pageWidth - 20; // Some margin
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      
+      // Add image to PDF
+      pdf.addImage(imgData, 'PNG', 10, 40, imgWidth, imgHeight);
+      
+      // Save PDF with filename based on tournament name
+      const filename = `${selectedTournamentName.replace(/\s+/g, '_')}_Matches.pdf`;
+      pdf.save(filename);
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      alert("Failed to generate PDF. Please try again.");
+    } finally {
+      setGeneratingPdf(false);
+    }
   };
 
   // Helper function to get match status with color code
@@ -187,13 +248,38 @@ const Matches = () => {
         </select>
       </div>
       
+      {/* PDF Button */}
+      {selectedTournamentId && matches.length > 0 && (
+        <div className="mb-6 flex justify-end">
+          {user && (<button
+            onClick={generatePDF}
+            disabled={generatingPdf}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded flex items-center gap-2 disabled:bg-blue-400"
+          >
+            {generatingPdf ? (
+              <>
+                <span className="animate-spin inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full"></span>
+                Generating PDF...
+              </>
+            ) : (
+              <>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z" clipRule="evenodd" />
+                </svg>
+                Generate PDF
+              </>
+            )}
+          </button>)}
+        </div>
+      )}
+      
       {/* Matches Display */}
       {loading ? (
         <div className="text-center py-8">
           <p className="text-gray-500">Loading matches...</p>
         </div>
       ) : selectedTournamentId && matches.length > 0 ? (
-        <div className="overflow-x-auto">
+        <div id="matches-table-container" className="overflow-x-auto">
           <table className="min-w-full bg-white border border-gray-200">
             <thead className="bg-gray-100">
               <tr>

@@ -26,7 +26,7 @@ function App() {
           <Route path="/" element={<Main />}>
           <Route index element={<Home2 />} />
           <Route path="tournaments" element={<Tournaments />} />
-          <Route path="team/:id" element={<TeamPage />} />
+          <Route path="team/:id/:name" element={<TeamPage />} />
           <Route path="live" element={<LiveMatch />} />
           <Route path="matches" element={<Matches />} />
           <Route path="pointstable" element={<PointsTable />} />
