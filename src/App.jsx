@@ -17,6 +17,7 @@ import Matches from "./Components/Matches";
 import PointsTable from "./Components/PointsTable ";
 import Scorer from "./Dashboard/Scorer";
 import MatchDetails from "./Dashboard/MatchDetails";
+import SuperAdmin from "./Dashboard/SuperAdmin";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />}>
               <Route index element={<Home />} />
+              <Route path="superadmin" element={<SuperAdmin />} />
               <Route path="addtournament" element={<AddTournament />} />
               <Route path="addteam" element={<TeamForm />} />
               <Route path="addplayers" element={<CaptainPlayers />} />

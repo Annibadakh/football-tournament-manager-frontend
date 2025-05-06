@@ -71,6 +71,7 @@ function Login() {
               <option value="captain">Captain</option>
               <option value="scorer">Scorer</option>
               <option value="admin">Admin</option>
+              <option value="superadmin">Super Admin</option>
             </select>
           </div>
           <div className="flex justify-between">
