@@ -101,7 +101,7 @@ const TournamentForm = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      {tournaments.length < 1 && (
+      {tournaments.length < 2 && (
         <button
         onClick={() => setShowForm(true)}
         className="mb-6 px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition"

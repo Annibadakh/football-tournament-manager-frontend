@@ -473,7 +473,7 @@ const PointsTable = () => {
             </div>
           )}
 
-          {topScorers.length > 0 && (
+          {/* {topScorers.length > 0 && (
             <div className="mt-10">
               <h2 className="text-xl font-semibold mb-4 text-center">Top Goal Scorers</h2>
               <div className="grid md:grid-cols-3 gap-6">
@@ -502,7 +502,7 @@ const PointsTable = () => {
                 ))}
               </div>
             </div>
-          )}
+          )} */}
         </>
       )}
     </div>
