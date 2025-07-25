@@ -139,17 +139,9 @@ const TeamForm = () => {
         </button>
       </div>
 
-      {teams.length > 0 ? (
-        <TeamTable teams={teams} />
-      ) : (
-        <p className="text-gray-500 mb-4">No team added yet !!</p>
-      )}
-    </>
-  )}
-
-  {/* Team Form */}
+      {/* Team Form */}
   {formVisible && (
-    <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+    <form onSubmit={handleSubmit} className="grid grid-cols-1 p-2 mb-10 border md:grid-cols-2 gap-4 mt-6">
       <div className="col-span-1 md:col-span-2">
         <label className="block font-semibold mb-1">Team Name</label>
         <input
@@ -223,13 +215,23 @@ const TeamForm = () => {
       <div className="col-span-1 md:col-span-2 flex justify-end mt-6">
         <button
           type="submit"
-          className="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+          className="px-6 py-2 mb-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
         >
           Submit Team
         </button>
       </div>
     </form>
   )}
+
+      {teams.length > 0 ? (
+        <TeamTable teams={teams} />
+      ) : (
+        <p className="text-gray-500 mb-4">No team added yet !!</p>
+      )}
+    </>
+  )}
+
+  
 </div>
 
   );
