@@ -24,8 +24,8 @@ const Header = () => {
             </div>
             
             <div>
-{/*             <button onClick={() => navigate('/')} className="bg-blue-500 text-white px-4 py-2 mx-2 rounded">Main</button> */}
-                
+            {/* <button onClick={() => navigate('/')} className="bg-blue-500 text-white px-4 py-2 mx-2 rounded">Main</button> */}
+
                 <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded">Logout</button>
             </div>
         </nav>

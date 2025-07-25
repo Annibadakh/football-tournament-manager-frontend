@@ -4,8 +4,8 @@ import PaymentPage from "./PaymentPage";
 const Home = () => {
     const {user} = useAuth();
     return (
-        <>Home
-        {user.role == "admin" && <PaymentPage />}
+        <>
+        {/* {user.role == "admin" ? <PaymentPage /> : <h2>Home</h2>} */}
         </>
         
     )

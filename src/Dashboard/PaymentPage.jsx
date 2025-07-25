@@ -1,19 +1,27 @@
 import React, { useState } from 'react';
 import api from '../Api';
+import { useAuth } from "../Context/AuthContext"
+
 
 const PaymentPage = () => {
+  const { user } = useAuth();
+  console.log(user);
   const [paymentDetails, setPaymentDetails] = useState(null);
+  const [orderId, setOrderId] = useState("");
 
   const handlePayment = async () => {
     try {
       // Create order from backend
       const res = await api.post('/payment/create-order', {
-          amount: 500, // ₹500
-          receipt: 'rcpt_001',
-          notes: { user: 'John Doe', product: 'Premium Course' }
+          amount: 500,
+          receipt: user.uuid,
+          userId: user.uuid,
+          email: user.email,
+          userName: user.userName
         })
         console.log(res.data)
       const data = res.data;
+      setOrderId(res.data.orderId);
 
       if (!data.success) {
         alert('Failed to create order');
@@ -24,24 +32,35 @@ const PaymentPage = () => {
         key: data.keyId,
         amount: data.amount,
         currency: data.currency,
-        name: 'MyCompany Pvt Ltd',
+        name: 'ANIKET RAMESH BADAKH',
         description: 'Test Transaction',
         order_id: data.orderId,
-        handler: function (response) {
-          setPaymentDetails(response); // Show success data on screen
+        handler: async function (response) {
+          const payload = {
+            ...response,
+            status: "paid",
+          }
+          const data = await api.post("/payment/verify-payment", payload);
+          setPaymentDetails(response);
+          console.log('Payment Success:', response, data);
         },
         prefill: {
-          name: 'John Doe',
-          email: 'john@example.com',
-          contact: '9876543210',
-        },
-        notes: {
-          address: 'Corporate Office',
+          name: user.userName,
+          email: user.email,
         },
         theme: {
           color: '#6366f1',
         },
+        modal: {
+          ondismiss: async function () {
+            const data = await api.post("/payment/verify-payment", {razorpay_order_id: orderId, razorpay_payment_id:null, status: "failed" });
+            console.log(data);
+            console.warn('Payment popup was closed by the user.');
+            alert('Payment was not completed or was cancelled.');
+          }
+        }
       };
+      
 
       const razor = new window.Razorpay(options);
       razor.open();
@@ -52,7 +71,7 @@ const PaymentPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
+    <div className="flex flex-col items-center justify-center bg-gray-100 p-20">
       <div className="bg-white shadow-md rounded-xl p-6 w-full max-w-md text-center">
         <h2 className="text-2xl font-bold mb-4">Make a Payment</h2>
         <p className="text-gray-700 mb-2">Product: <strong>Premium Course</strong></p>
