@@ -5,7 +5,7 @@ const Home = () => {
     const {user} = useAuth();
     return (
         <>
-        {user.role == "admin" ? <PaymentPage /> : <h2>Home</h2>}
+        {/* {user.role == "admin" ? <PaymentPage /> : <h2>Home</h2>} */}
         </>
         
     )
