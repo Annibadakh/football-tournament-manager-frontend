@@ -3,7 +3,7 @@ import api from "../Api";
 import { useAuth } from "../Context/AuthContext";
 
 const CaptainPlayers = () => {
-  const MAX_PLAYERS = 11; // Maximum number of players allowed
+  const MAX_PLAYERS = 10; // Maximum number of players allowed
   const imgUrl = import.meta.env.VITE_IMAGE_URL;
   const { user } = useAuth();
   const [team, setTeam] = useState(null);
