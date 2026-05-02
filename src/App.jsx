@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import './App.css';
-import { ProtectedRoute, ProtectedRoleBasedRoute } from './ProtectedRoute';
-import Main from './Components/Main';
+import "./App.css";
+import { ProtectedRoute, ProtectedRoleBasedRoute } from "./ProtectedRoute";
+import Main from "./Components/Main";
 import Login from "./Components/Login";
 import Dashboard from "./Dashboard/Dashboard";
 import Home from "./Dashboard/Home";
@@ -18,6 +18,7 @@ import PointsTable from "./Components/PointsTable ";
 import Scorer from "./Dashboard/Scorer";
 import MatchDetails from "./Dashboard/MatchDetails";
 import SuperAdmin from "./Dashboard/SuperAdmin";
+import Comittee from "./Components/Comittee";
 
 function App() {
   return (
@@ -25,12 +26,14 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Main />}>
-          <Route index element={<Home2 />} />
-          <Route path="tournaments" element={<Tournaments />} />
-          <Route path="team/:id/:name" element={<TeamPage />} />
-          <Route path="live" element={<LiveMatch />} />
-          <Route path="matches" element={<Matches />} />
-          <Route path="pointstable" element={<PointsTable />} />
+            <Route index element={<Home2 />} />
+            <Route path="commitee" element={<Comittee />} />
+
+            <Route path="tournaments" element={<Tournaments />} />
+            <Route path="team/:id/:name" element={<TeamPage />} />
+            <Route path="live" element={<LiveMatch />} />
+            <Route path="matches" element={<Matches />} />
+            <Route path="pointstable" element={<PointsTable />} />
           </Route>
           <Route path="/login" element={<Login />} />
           <Route element={<ProtectedRoute />}>
