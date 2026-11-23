@@ -12,6 +12,7 @@ Read these before starting work. They are the source of context for anyone (huma
 | [04-coding-standards.md](./04-coding-standards.md) | Coding philosophy, layer responsibilities, naming, comments | Active |
 | [05-project-structure.md](./05-project-structure.md) | Target folder layout and the changes from the current code | Active |
 | [06-business-requirements.md](./06-business-requirements.md) | Core business pillars: users and roles, tournaments, teams, payments, live | Agreed |
+| [plans/v1-to-v2-gap-analysis.md](./plans/v1-to-v2-gap-analysis.md) | What v1 does vs what v2 needs (keep / change / new / remove) | Draft |
 
 Related backend docs live in `football-tournament-manager-backend/docs/`.
 
