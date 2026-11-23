@@ -107,6 +107,11 @@ No file names with spaces (for example the current `PointsTable .jsx`) and no mi
 - No wrapper-around-a-wrapper and no premature generic "factory" helpers.
 - Plain React state is fine. Use Redux only for genuinely shared state.
 
+## Async code
+- Use **async/await everywhere**. Do not mix in `.then()` chains or callbacks.
+- Run independent requests in parallel with `Promise.all`, and never fetch inside a loop (`map` + `await`). Ask the backend for one endpoint that returns the related data instead (avoid N+1 API calls).
+- Cancel or ignore stale requests when the component unmounts or the inputs change (`AbortController`).
+
 ## Comments
 Comments are **short, meaningful, one line**. They explain **why** (or a non-obvious *what*), never repeat the code.
 
