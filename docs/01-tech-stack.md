@@ -35,7 +35,7 @@ The v2 refactor fixes these as files are rewritten. New code must lint clean.
 
 | Concern | Library | Rule |
 |---|---|---|
-| Validation | **zod** (v4) | One schema per form/entity in `*.schema.js`, next to the feature. Validate on submit with `schema.safeParse(values)` and map `error.issues` to a `{ field: message }` object. Do not hand-write validation `if` chains. |
+| Validation | **zod** (v4) | One schema per form/entity in `*.schema.js`, next to the feature. Frontend schemas are **separate** from the backend's (each repo owns its own), and they exist for user experience and instant feedback. The backend re-validates everything. Validate on submit with `schema.safeParse(values)` and map `error.issues` to a `{ field: message }` object. Do not hand-write validation `if` chains. |
 | Forms | **React state (no React Hook Form)** | Use `useState` for the form values object, one generic `handleChange(name, value)`, an `errors` state, a `submitting` state, and an `onSubmit` that validates with zod and then calls the API. Do not add React Hook Form / Formik. |
 | Icons | **lucide-react** | The only icon library. Import named icons: `import { Trophy } from "lucide-react"`. No react-icons or inline SVG icon packs. |
 | Dates & times | **date-fns** (v4) | All parsing, formatting and arithmetic (`format`, `parseISO`, `differenceInMinutes`, `isBefore`…). No moment or dayjs, and no manual string slicing of dates. Keep format strings in one shared `utils/date.js`. |
