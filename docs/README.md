@@ -10,6 +10,7 @@ Read these before starting work. They are the source of context for anyone (huma
 | [02-generic-components.md](./02-generic-components.md) | Full list of shared UI components with their priority (P1/P2/P3) and intended API | Planning |
 | [03-api-response-handling.md](./03-api-response-handling.md) | API response contract and the centralized frontend request wrapper | Planning |
 | [04-coding-standards.md](./04-coding-standards.md) | Coding philosophy, layer responsibilities, naming, comments | Active |
+| [05-project-structure.md](./05-project-structure.md) | Target folder layout and the changes from the current code | Active |
 
 Related backend docs live in `football-tournament-manager-backend/docs/`.
 

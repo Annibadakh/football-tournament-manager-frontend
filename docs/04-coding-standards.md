@@ -35,7 +35,8 @@ The same philosophy applies to the backend (`football-tournament-manager-backend
 | `hooks/` | Reusable stateful logic (data fetching, debounce, table state) | Render UI |
 | `services/` | API calls through the `request` wrapper (see 03) | Touch React state or show UI |
 | `store/` | Redux slices (shared state) | Make API calls inside reducers |
-| `validations/` or `*.schema.js` | zod schemas | Contain UI logic |
+| `validations/` | zod schemas, `<module>.schema.js` | Contain UI logic |
+| `constants/` | Per-module constants, enums and label maps | Import React or components |
 | `utils/` | Pure helpers (date, number, string) | Have side effects |
 
 ### 4. Naming conventions
@@ -93,7 +94,24 @@ No file names with spaces (for example the current `PointsTable .jsx`) and no mi
 
 ### 7. Centralized configuration & constants
 - `src/config/env.js` is the only place that reads `import.meta.env`.
-- `src/constants/` holds roles, match statuses, stages, API route paths, route paths, date formats and the page-size options.
+- Constants are **centralized per module**: one file per module in `src/constants/`, for example `match.constants.js`, `team.constants.js`, `user.constants.js`, plus `common.constants.js` for cross-module values. Never define a status or role inline in a component, hook or service.
+- Enumerations use **numeric codes**, frozen and grouped in one object. Always compare against the constant, never a raw number or string:
+```js
+// Numeric codes are stored in the DB; never compare against raw numbers
+const MATCH_STATUS = Object.freeze({
+  SCHEDULED: 1,
+  LIVE: 2,
+  COMPLETED: 3,
+  CANCELLED: 4,
+});
+
+if (match.status === MATCH_STATUS.COMPLETED) {
+  // ...
+}
+```
+- Numeric codes **mirror the backend** exactly (the backend constants are the source of truth). When a code changes in the backend, update the matching frontend file in the same feature.
+- UI-only data lives next to the enum in the same file. That means label and Badge variant maps, for example `MATCH_STATUS_LABEL = { [MATCH_STATUS.LIVE]: "Live" }`.
+- `common.constants.js` holds page-size options, date formats and polling intervals. `routes.constants.js` holds the app route paths.
 - No magic strings or numbers in components (`"admin"`, `30000`, `"started"` → constants).
 
 ### 8. Predictable API responses
