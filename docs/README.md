@@ -11,6 +11,7 @@ Read these before starting work. They are the source of context for anyone (huma
 | [03-api-response-handling.md](./03-api-response-handling.md) | API response contract and the centralized frontend request wrapper | Planning |
 | [04-coding-standards.md](./04-coding-standards.md) | Coding philosophy, layer responsibilities, naming, comments | Active |
 | [05-project-structure.md](./05-project-structure.md) | Target folder layout and the changes from the current code | Active |
+| [06-business-requirements.md](./06-business-requirements.md) | Core business pillars: users and roles, tournaments, teams, payments, live | Agreed |
 
 Related backend docs live in `football-tournament-manager-backend/docs/`.
 
