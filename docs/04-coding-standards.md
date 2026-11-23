@@ -39,22 +39,47 @@ The same philosophy applies to the backend (`football-tournament-manager-backend
 | `utils/` | Pure helpers (date, number, string) | Have side effects |
 
 ### 4. Naming conventions
-| Thing | Convention | Example |
+| Element | Convention | Example |
 |---|---|---|
-| Component file and name | PascalCase | `TeamCard.jsx` |
-| Hook | camelCase starting with `use` | `useDebounce.js` |
-| Service | `<entity>.service.js` | `team.service.js` |
-| Schema | `<entity>.schema.js`, exported as `<entity>Schema` | `teamSchema` |
-| Redux slice | `<entity>Slice.js` | `authSlice.js` |
-| Util / plain JS file | camelCase | `formatDate.js` |
-| Variables / functions | camelCase, verb-first for functions | `fetchTeams`, `isLoading` |
-| Booleans | `is/has/can/should` prefix | `isApproved`, `canEdit` |
+| Folders | kebab-case | `team-management/` |
+| Files | camelCase or kebab-case, with a dotted layer suffix | `team.service.js`, `matchUtils.js` |
+| Variables | camelCase | `teamId` |
+| Functions | camelCase | `createTeam()` |
+| Classes | PascalCase | `TeamService`, `ApiError` |
+| Constants | UPPER_SNAKE_CASE | `MAX_TEAM_SIZE` |
+| Database tables | snake_case | `tournament_teams` |
+| Database columns | snake_case | `created_at` |
+| API endpoints | kebab-case, plural resource nouns | `/api/team-members` |
+| Boolean variables | `is` / `has` / `can` prefix | `isActive` |
+| React components | PascalCase file and name (React convention) | `TeamCard.jsx` |
+| Hooks | `use` prefix | `useDebounce.js` |
 | Event handlers | `handle<Event>`; props are `on<Event>` | `handleSubmit` / `onSubmit` |
-| Constants | UPPER_SNAKE_CASE | `MATCH_STATUS`, `API_ROUTES` |
-| Folders | kebab-case for multi-word names | `match-details/` |
-| Routes (URLs) | kebab-case | `/dashboard/match-details/:matchId` |
+
+#### Function naming
+Names must say **what** the function does and **to what**. No generic names.
+
+| Avoid | Prefer |
+|---|---|
+| `getData()` | `getTournamentDetails()` |
+| `processData()` | `calculateMatchPoints()` |
+| `update()` | `updateTeamDetails()` |
+| `check()` | `isRegistrationOpen()` |
+| `handle()` | `handleMatchCompletion()` |
+
+**Use verbs consistently:**
+| Verb | Meaning | Example |
+|---|---|---|
+| `get` | Retrieve data (by id, or a list) | `getMatchById()`, `getTeamsByTournament()` |
+| `find` | Search for a record that may not exist | `findUserByEmail()` |
+| `create` | Create a record | `createTournament()` |
+| `update` | Modify a record | `updateMatchStatus()` |
+| `delete` | Delete a record | `deletePlayer()` |
+| `is` / `has` | Boolean checks | `isMatchLive()`, `hasPaidEntryFee()` |
+| `calculate` | Perform calculations | `calculateGoalDifference()` |
+| `validate` | Validate data | `validateMatchSchedule()` |
 
 No file names with spaces (for example the current `PointsTable .jsx`) and no misspellings (`Comittee`). Fix these when a file is touched.
+
 
 ### 5. Explicit validation & error handling
 - Every form is validated with its zod schema before submit, and field errors are shown inline.
