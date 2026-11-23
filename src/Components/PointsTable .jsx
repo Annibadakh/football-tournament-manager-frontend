@@ -317,7 +317,7 @@ const PointsTable = () => {
             id="tournament-select"
             value={selectedTournament}
             onChange={handleTournamentChange}
-            className="block w-full px-4 py-3 bg-white border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-base"
+            className="block w-full px-4 py-3 bg-white border border-gray-300 rounded-md shadow-xs focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-base"
             disabled={tournaments.length === 0}
           >
             {tournaments.length === 0 && (
@@ -411,7 +411,7 @@ const PointsTable = () => {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="flex items-center">
-                              <div className="flex-shrink-0 h-10 w-10">
+                              <div className="shrink-0 h-10 w-10">
                                 {team.logoUrl ? (
                                   <img
                                     className="h-10 w-10 rounded-full object-contain bg-gray-50"

@@ -235,7 +235,7 @@ const Matches = () => {
       <div className="mb-6">
         <label className="block font-semibold mb-2">Select Tournament</label>
         <select
-          className="w-full border px-3 py-2 rounded"
+          className="w-full border px-3 py-2 rounded-sm"
           value={selectedTournamentId}
           onChange={handleTournamentSelect}
         >
@@ -254,7 +254,7 @@ const Matches = () => {
           {user && (<button
             onClick={generatePDF}
             disabled={generatingPdf}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded flex items-center gap-2 disabled:bg-blue-400"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-sm flex items-center gap-2 disabled:bg-blue-400"
           >
             {generatingPdf ? (
               <>

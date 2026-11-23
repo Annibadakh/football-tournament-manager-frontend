@@ -47,12 +47,12 @@ const TeamTable = ({ teams: initialTeams }) => {
         <div className="relative"> {/* Make the parent section relative */}
           {/* Player List Section */}
           {showPlayersFor && (
-            <div className="absolute top-0 left-0 w-full h-full bg-white bg-opacity-95 z-40 overflow-auto p-6 border border-gray-300 rounded shadow-xl">
+            <div className="absolute top-0 left-0 w-full h-full bg-white bg-opacity-95 z-40 overflow-auto p-6 border border-gray-300 rounded-sm shadow-xl">
               <h3 className="text-xl font-semibold mb-4">Player List</h3>
     
               {players.length > 0 ? (
                 <div className="overflow-x-auto">
-                  <table className="min-w-full bg-white border border-gray-300 rounded-md shadow">
+                  <table className="min-w-full bg-white border border-gray-300 rounded-md shadow-sm">
                     <thead>
                       <tr className="bg-gray-100">
                         <th className="px-4 py-2 border-b">#</th>
@@ -89,7 +89,7 @@ const TeamTable = ({ teams: initialTeams }) => {
     
               <button
                 onClick={closePlayers}
-                className="mt-4 px-4 py-2 bg-red-600 text-white rounded"
+                className="mt-4 px-4 py-2 bg-red-600 text-white rounded-sm"
               >
                 Close Player List
               </button>
@@ -140,7 +140,7 @@ const TeamTable = ({ teams: initialTeams }) => {
                     </td>
                     <td className="border px-4 py-2">
                       <button
-                        className="px-2 py-1 bg-blue-500 text-white rounded text-sm"
+                        className="px-2 py-1 bg-blue-500 text-white rounded-sm text-sm"
                         onClick={() => fetchPlayers(team.uuid)}
                       >
                         Show Players

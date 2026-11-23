@@ -92,7 +92,7 @@ const Scorer = () => {
       <div className="mb-6">
         <label className="block font-semibold mb-2">Select Tournament</label>
         <select
-          className="w-full border px-3 py-2 rounded"
+          className="w-full border px-3 py-2 rounded-sm"
           value={selectedTournamentId}
           onChange={handleTournamentSelect}
         >

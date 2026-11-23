@@ -306,7 +306,7 @@ const MatchDetails = () => {
           <div className="mb-2 sm:mb-0">
             <label className="block text-sm font-medium mb-1">Match Status:</label>
             <select
-              className="border rounded px-3 py-2"
+              className="border rounded-sm px-3 py-2"
               value={match.status}
               onChange={(e) => handleStatusChange(e.target.value)}
               disabled={match.status === 'ended'}
@@ -329,7 +329,7 @@ const MatchDetails = () => {
           <div className="flex space-x-2">
             {match.status === 'pending' && (
               <button 
-                className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                className="bg-green-600 text-white px-4 py-2 rounded-sm hover:bg-green-700"
                 onClick={() => handleStatusChange('started')}
               >
                 Start Match
@@ -339,13 +339,13 @@ const MatchDetails = () => {
             {match.status === 'started' && (
               <>
                 <button 
-                  className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600"
+                  className="bg-yellow-500 text-white px-4 py-2 rounded-sm hover:bg-yellow-600"
                   onClick={() => handleStatusChange('paused')}
                 >
                   Pause
                 </button>
                 <button 
-                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                  className="bg-blue-500 text-white px-4 py-2 rounded-sm hover:bg-blue-600"
                   onClick={() => handleStatusChange('half-time')}
                 >
                   Half-Time
@@ -355,7 +355,7 @@ const MatchDetails = () => {
             
             {match.status === 'paused' && (
               <button 
-                className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                className="bg-green-600 text-white px-4 py-2 rounded-sm hover:bg-green-700"
                 onClick={() => handleStatusChange('started')}
               >
                 Resume
@@ -364,7 +364,7 @@ const MatchDetails = () => {
             
             {(match.status === 'half-time' || match.status === 'break') && (
               <button 
-                className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                className="bg-green-600 text-white px-4 py-2 rounded-sm hover:bg-green-700"
                 onClick={() => handleStatusChange('started')}
               >
                 Resume Match
@@ -373,7 +373,7 @@ const MatchDetails = () => {
             
             {match.status !== 'ended' && match.status !== 'pending' && (
               <button 
-                className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+                className="bg-red-600 text-white px-4 py-2 rounded-sm hover:bg-red-700"
                 onClick={() => handleStatusChange('ended')}
               >
                 End Match
@@ -407,14 +407,14 @@ const MatchDetails = () => {
                     <td className="py-2 px-3">
                       <div className="flex justify-center space-x-2">
                         <button 
-                          className="bg-red-100 text-red-700 px-2 py-1 rounded hover:bg-red-200"
+                          className="bg-red-100 text-red-700 px-2 py-1 rounded-sm hover:bg-red-200"
                           onClick={() => handleScoreChange(1, index, -1)}
                           disabled={player.goals === 0 || match.status === 'ended'}
                         >
                           -
                         </button>
                         <button 
-                          className="bg-green-100 text-green-700 px-2 py-1 rounded hover:bg-green-200"
+                          className="bg-green-100 text-green-700 px-2 py-1 rounded-sm hover:bg-green-200"
                           onClick={() => handleScoreChange(1, index, 1)}
                           disabled={match.status === 'ended'}
                         >
@@ -456,14 +456,14 @@ const MatchDetails = () => {
                     <td className="py-2 px-3">
                       <div className="flex justify-center space-x-2">
                         <button 
-                          className="bg-red-100 text-red-700 px-2 py-1 rounded hover:bg-red-200"
+                          className="bg-red-100 text-red-700 px-2 py-1 rounded-sm hover:bg-red-200"
                           onClick={() => handleScoreChange(2, index, -1)}
                           disabled={player.goals === 0 || match.status === 'ended'}
                         >
                           -
                         </button>
                         <button 
-                          className="bg-green-100 text-green-700 px-2 py-1 rounded hover:bg-green-200"
+                          className="bg-green-100 text-green-700 px-2 py-1 rounded-sm hover:bg-green-200"
                           onClick={() => handleScoreChange(2, index, 1)}
                           disabled={match.status === 'ended'}
                         >
@@ -502,7 +502,7 @@ const MatchDetails = () => {
             </p>
             {/* Back button - only appears when match is ended */}
             <button 
-              className="mt-4 bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
+              className="mt-4 bg-blue-600 text-white px-6 py-2 rounded-sm hover:bg-blue-700"
               onClick={handleBackToScorer}
             >
               Back to Dashboard

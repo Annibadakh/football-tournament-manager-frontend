@@ -131,12 +131,12 @@ const CaptainPlayers = () => {
       {/* Team Status Message */}
       <div className="text-center mb-4">
         {isTeamFull ? (
-          <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-2 rounded mb-4">
+          <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-2 rounded-sm mb-4">
             <p className="font-semibold">Team is full!</p>
             <p className="text-sm">Maximum number of players ({MAX_PLAYERS}) has been reached.</p>
           </div>
         ) : (
-          <div className="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-2 rounded mb-4">
+          <div className="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-2 rounded-sm mb-4">
             <p className="text-sm">You can add {MAX_PLAYERS - players.length} more player(s) to complete your team.</p>
           </div>
         )}
@@ -160,7 +160,7 @@ const CaptainPlayers = () => {
             name="name"
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-400"
+            className="w-full px-4 py-2 border rounded-md focus:outline-hidden focus:ring-3 focus:border-blue-400"
             placeholder="Player Name"
             required
           />
@@ -168,7 +168,7 @@ const CaptainPlayers = () => {
             name="position"
             value={form.position}
             onChange={(e) => setForm({ ...form, position: e.target.value })}
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-400"
+            className="w-full px-4 py-2 border rounded-md focus:outline-hidden focus:ring-3 focus:border-blue-400"
             required
           >
             <option value="">Select Position</option>
@@ -182,7 +182,7 @@ const CaptainPlayers = () => {
             type="number"
             value={form.jerseyNumber}
             onChange={(e) => setForm({ ...form, jerseyNumber: e.target.value })}
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-400"
+            className="w-full px-4 py-2 border rounded-md focus:outline-hidden focus:ring-3 focus:border-blue-400"
             placeholder="Jersey Number"
             required
           />
@@ -195,7 +195,7 @@ const CaptainPlayers = () => {
                 <input type="file" accept="image/*" onChange={handleFileChange} />
                 
                 {uploadError && (
-                  <div className="mt-2 bg-red-100 border border-red-400 text-red-700 px-3 py-2 rounded text-sm">
+                  <div className="mt-2 bg-red-100 border border-red-400 text-red-700 px-3 py-2 rounded-sm text-sm">
                     {uploadError}
                   </div>
                 )}
@@ -204,7 +204,7 @@ const CaptainPlayers = () => {
                   type="button"
                   onClick={handleUpload}
                   disabled={isUploading}
-                  className={`mt-2 px-4 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 ${isUploading ? 'opacity-75 cursor-not-allowed' : ''}`}
+                  className={`mt-2 px-4 py-1 bg-blue-500 text-white rounded-sm hover:bg-blue-600 ${isUploading ? 'opacity-75 cursor-not-allowed' : ''}`}
                 >
                   {isUploading ? (
                     <span className="flex items-center justify-center">
@@ -222,7 +222,7 @@ const CaptainPlayers = () => {
             )}
             {preview && (
               <div className="mt-2">
-                <img src={preview} alt="Preview" className="h-20 rounded-md shadow" />
+                <img src={preview} alt="Preview" className="h-20 rounded-md shadow-sm" />
               </div>
             )}
             {photoSaved ? (
@@ -235,7 +235,7 @@ const CaptainPlayers = () => {
           {photoSaved && (
             <button
               type="submit"
-              className="w-full py-2 mt-2 bg-green-600 hover:bg-green-700 text-white rounded-md shadow"
+              className="w-full py-2 mt-2 bg-green-600 hover:bg-green-700 text-white rounded-md shadow-sm"
             >
               Add Player
             </button>

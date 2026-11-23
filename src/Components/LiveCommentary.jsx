@@ -39,7 +39,7 @@ const LiveCommentary = () => {
   }, []);
 
   return (
-    <div className="p-6 bg-gray-100 rounded shadow-md max-w-xl mx-auto">
+    <div className="p-6 bg-gray-100 rounded-sm shadow-md max-w-xl mx-auto">
       <h2 className="text-2xl font-semibold mb-4">📢 Live Commentary</h2>
       <span className="font-bold text-blue-600">{events.teamName}</span> {operationMap[events.operationId] || 'did something'}.
       

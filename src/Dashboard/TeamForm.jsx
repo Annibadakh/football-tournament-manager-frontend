@@ -120,7 +120,7 @@ const TeamForm = () => {
         <select
           onChange={handleTournamentSelect}
           value={selectedTournamentId}
-          className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full border border-gray-300 rounded-sm px-4 py-2 focus:outline-hidden focus:ring-2 focus:ring-blue-500"
         >
           <option value="">-- Select Tournament --</option>
           {tournaments.map((t) => (
@@ -172,7 +172,7 @@ const TeamForm = () => {
                   name="teamName"
                   value={form.teamName}
                   onChange={handleChange}
-                  className="w-full border rounded px-4 py-2"
+                  className="w-full border rounded-sm px-4 py-2"
                   placeholder="Enter Team Name"
                   required
                 />
@@ -184,7 +184,7 @@ const TeamForm = () => {
                   name="captainName"
                   value={form.captainName}
                   onChange={handleChange}
-                  className="w-full border rounded px-4 py-2"
+                  className="w-full border rounded-sm px-4 py-2"
                   placeholder="Enter Captain Name"
                   required
                 />
@@ -196,7 +196,7 @@ const TeamForm = () => {
                   name="captainEmail"
                   value={form.captainEmail}
                   onChange={handleChange}
-                  className="w-full border rounded px-4 py-2"
+                  className="w-full border rounded-sm px-4 py-2"
                   placeholder="Enter Email"
                   type="email"
                   required
@@ -209,7 +209,7 @@ const TeamForm = () => {
                   name="captainContact"
                   value={form.captainContact}
                   onChange={handleChange}
-                  className="w-full border rounded px-4 py-2"
+                  className="w-full border rounded-sm px-4 py-2"
                   placeholder="Enter Contact Number"
                   required
                 />
@@ -224,14 +224,14 @@ const TeamForm = () => {
                     <button
                       type="button"
                       onClick={handleUpload}
-                      className="px-4 py-2 bg-blue-500 text-white rounded"
+                      className="px-4 py-2 bg-blue-500 text-white rounded-sm"
                     >
                       Upload Logo
                     </button>
                   </div>
                 )}
                 {preview && (
-                  <img src={preview} alt="Logo Preview" className="mt-3 h-20 rounded shadow" />
+                  <img src={preview} alt="Logo Preview" className="mt-3 h-20 rounded-sm shadow-sm" />
                 )}
                 {photoSaved && <p className="text-green-600 mt-2">✅ Logo saved</p>}
               </div>
@@ -239,7 +239,7 @@ const TeamForm = () => {
               <div className="col-span-1 md:col-span-2 flex justify-end mt-6">
                 <button
                   type="submit"
-                  className="px-6 py-2 mb-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+                  className="px-6 py-2 mb-2 bg-green-600 text-white rounded-sm hover:bg-green-700 transition"
                 >
                   Submit Team
                 </button>

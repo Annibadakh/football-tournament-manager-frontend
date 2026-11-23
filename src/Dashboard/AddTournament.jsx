@@ -120,7 +120,7 @@ const TournamentForm = () => {
               onChange={handleChange}
               placeholder="Tournament Name"
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-xs focus:outline-hidden focus:ring-2 focus:ring-blue-500"
             />
             <input
               name="totalTeams"
@@ -128,14 +128,14 @@ const TournamentForm = () => {
               onChange={handleChange}
               placeholder="Total Teams"
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-xs focus:outline-hidden focus:ring-2 focus:ring-blue-500"
             />
   
             <select
               name="type"
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-xs bg-white focus:outline-hidden focus:ring-2 focus:ring-blue-500"
             >
               <option value="league">League</option>
               <option value="group">Group</option>
@@ -148,21 +148,21 @@ const TournamentForm = () => {
               onChange={handleChange}
               placeholder="Team Size"
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-xs focus:outline-hidden focus:ring-2 focus:ring-blue-500"
             />
             <input
               name="startDate"
               type="date"
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-xs focus:outline-hidden focus:ring-2 focus:ring-blue-500"
             />
             <input
               name="endDate"
               type="date"
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-xs focus:outline-hidden focus:ring-2 focus:ring-blue-500"
             />
             <input
               name="amountPerTeam"
@@ -170,7 +170,7 @@ const TournamentForm = () => {
               onChange={handleChange}
               placeholder="Amount Per Team"
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-xs focus:outline-hidden focus:ring-2 focus:ring-blue-500"
             />
             <input
               name="pointsWin"
@@ -178,7 +178,7 @@ const TournamentForm = () => {
               onChange={handleChange}
               placeholder="Points for Win"
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-xs focus:outline-hidden focus:ring-2 focus:ring-blue-500"
             />
             <input
               name="pointsDraw"
@@ -186,7 +186,7 @@ const TournamentForm = () => {
               onChange={handleChange}
               placeholder="Points for Draw"
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-xs focus:outline-hidden focus:ring-2 focus:ring-blue-500"
             />
             <input
               name="pointsLoss"
@@ -194,7 +194,7 @@ const TournamentForm = () => {
               onChange={handleChange}
               placeholder="Points for Loss"
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-xs focus:outline-hidden focus:ring-2 focus:ring-blue-500"
             />
   
             {/* File Upload */}

@@ -123,7 +123,7 @@ const MatchForm = () => {
       <div className="mb-4">
         <label className="block font-semibold mb-1">Select Tournament</label>
         <select
-          className="w-full border px-3 py-2 rounded"
+          className="w-full border px-3 py-2 rounded-sm"
           value={selectedTournamentId}
           onChange={handleTournamentSelect}
         >
@@ -146,7 +146,7 @@ const MatchForm = () => {
             <div className="mb-4">
               <label className="block font-semibold mb-1">Select Team 1</label>
               <select
-                className="w-full border px-3 py-2 rounded"
+                className="w-full border px-3 py-2 rounded-sm"
                 value={team1}
                 onChange={(e) => {
                   setTeam1(e.target.value);
@@ -168,7 +168,7 @@ const MatchForm = () => {
             <div className="mb-4">
               <label className="block font-semibold mb-1">Select Team 2</label>
               <select
-                className="w-full border px-3 py-2 rounded"
+                className="w-full border px-3 py-2 rounded-sm"
                 value={team2}
                 onChange={(e) => setTeam2(e.target.value)}
               >
@@ -194,7 +194,7 @@ const MatchForm = () => {
                   name="startDate"
                   value={matchInfo.startDate}
                   onChange={handleInputChange}
-                  className="w-full border px-3 py-2 rounded"
+                  className="w-full border px-3 py-2 rounded-sm"
                   required
                 />
               </div>
@@ -205,7 +205,7 @@ const MatchForm = () => {
                   name="startTime"
                   value={matchInfo.startTime}
                   onChange={handleInputChange}
-                  className="w-full border px-3 py-2 rounded"
+                  className="w-full border px-3 py-2 rounded-sm"
                   required
                 />
               </div>
@@ -216,7 +216,7 @@ const MatchForm = () => {
                   name="halfTime"
                   value={matchInfo.halfTime}
                   onChange={handleInputChange}
-                  className="w-full border px-3 py-2 rounded"
+                  className="w-full border px-3 py-2 rounded-sm"
                   placeholder="e.g. 15"
                   required
                 />
@@ -228,7 +228,7 @@ const MatchForm = () => {
                   name="breakTime"
                   value={matchInfo.breakTime}
                   onChange={handleInputChange}
-                  className="w-full border px-3 py-2 rounded"
+                  className="w-full border px-3 py-2 rounded-sm"
                   placeholder="e.g. 10"
                   required
                 />
@@ -236,7 +236,7 @@ const MatchForm = () => {
               <div className="mb-3">
                 <label className="block font-semibold mb-1">Select Stage</label>
                 <select
-                  className="w-full border px-3 py-2 rounded"
+                  className="w-full border px-3 py-2 rounded-sm"
                   value={stage}
                   onChange={(e) => setStage(e.target.value)}
                   required
@@ -252,7 +252,7 @@ const MatchForm = () => {
               <div className="text-right">
                 <button
                   onClick={handleSubmit}
-                  className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 transition"
+                  className="bg-green-600 text-white px-6 py-2 rounded-sm hover:bg-green-700 transition"
                 >
                   💾 Save Match
                 </button>

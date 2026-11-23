@@ -272,7 +272,7 @@ const LiveMatch = () => {
   if (error) {
     return (
       <div className="p-6 mt-10">
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-sm relative" role="alert">
           <strong className="font-bold">Error!</strong>
           <span className="block sm:inline"> {error}</span>
           <p className="mt-2 text-sm">Make sure you're connected to the internet and the server is running.</p>
@@ -476,7 +476,7 @@ const LiveMatch = () => {
                 return (
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {scorers.map((player, index) => (
-                      <div key={player.playerId || index} className="flex items-center p-2 bg-white rounded-md shadow-sm">
+                      <div key={player.playerId || index} className="flex items-center p-2 bg-white rounded-md shadow-xs">
                         <div className="bg-blue-100 text-blue-800 w-8 h-8 rounded-full flex items-center justify-center font-bold mr-3">
                           {index + 1}
                         </div>
