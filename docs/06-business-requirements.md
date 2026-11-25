@@ -94,7 +94,12 @@ v2 starts with a **fresh database and schema**. No v1 data is migrated.
 ## 6. Live matches
 - **Scores**: managed by the organizer and the tournament's scorers.
 - **Live streaming**: managed by the organizer and the tournament's media operators, **only if the admin enabled it** for that tournament.
-  - Phase 1: an embedded external live stream (for example a YouTube Live link) on the match page.
+  - **Phase 1 (confirmed): YouTube streaming.** The match is streamed on YouTube, and the organizer or a media operator adds the **YouTube URL to the match** in our app.
+    - Accepted URL formats: `youtube.com/watch?v=`, `youtube.com/live/`, `youtu.be/`. The backend validates the URL and stores the **video id**.
+    - The match page shows an **embedded player/preview** (`youtube-nocookie.com/embed/<id>`). It is also highlighted on the tournament page while the match is live.
+    - After the match the same video stays available as the **replay**.
+    - The URL can be added before the match (scheduled stream) and edited or removed later.
+    - The YouTube channel must allow **embedding**, otherwise the preview falls back to a "Watch on YouTube" link.
   - Phase 2 (future): streaming inside the app.
 - Match events, statistics and achievements cover what a proper football tournament manager needs. The exact list is defined at implementation time and drives the public profiles.
 
