@@ -55,7 +55,7 @@ v2 starts with a **fresh database and schema**. No v1 data is migrated.
 - Positions are a **master list** (table `positions`, seeded: Goalkeeper, Defender, Midfielder, Striker, …).
 - A player can have **multiple positions** on their profile (`user_positions`, with one marked primary).
 - When a player joins a team, the **position for that team** is selected and stored on the membership.
-  - **Verified player**: must pick one of their own profile positions.
+  - **Verified player**: the **captain selects** the position while adding the player, choosing only from that player's profile positions.
   - **Guest**: the captain picks any position, and it is **auto-added** to the guest's profile positions.
 - Public profile page (`/players/:playerId`, non-guessable id) shows personal info, positions, career totals (goals, matches, wins, achievements) and a **participation history**: one row per team membership, e.g. *Team A — Tournament B — Striker — 4 goals*.
 - **No match lineups.** A squad has only playing and substitute players (no standby/bench), so the **whole squad counts as having played** every match of their team. Matches played and wins for a player come from their team's matches.
