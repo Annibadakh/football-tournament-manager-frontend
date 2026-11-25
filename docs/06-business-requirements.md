@@ -99,7 +99,7 @@ v2 starts with a **fresh database and schema**. No v1 data is migrated.
       | Level | Use case | Shown on |
       |---|---|---|
       | **Tournament** | Inauguration, award ceremony, any non-match event. A tournament can have **many** of these | Tournament page (live/upcoming/past streams section) |
-      | **Match** | The match itself. Simultaneous matches each have **their own** stream | Match page, and highlighted on the tournament page while live |
+      | **Match** | The match itself. **Exactly one stream per match** (enforced by a unique `match_id`). Simultaneous matches each have their own stream | Match page, and highlighted on the tournament page while live |
     - Each stream has a **title**, an optional **scheduled time**, a **status** (scheduled → live → ended) and the YouTube video id. One table (`streams`) holds both levels: `tournament_id` is always set, and `match_id` is set only for match streams.
     - Accepted URL formats: `youtube.com/watch?v=`, `youtube.com/live/`, `youtu.be/`. The backend validates the URL and stores the **video id**.
     - Preview is an **embedded player** (`youtube-nocookie.com/embed/<id>`). After the event, the same video stays available as the **replay**.
@@ -116,6 +116,5 @@ v2 starts with a **fresh database and schema**. No v1 data is migrated.
 
 ## 8. Open points
 - Match events, stats and achievements list (section 6).
-- Whether a match can have more than one stream (for example a second camera angle). The default is one.
 - Which status transitions happen automatically by date.
 - Whether only confirmed (paid) teams can be put in fixtures.
