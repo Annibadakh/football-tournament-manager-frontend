@@ -17,7 +17,9 @@ v2 uses a fresh schema, so every table is redesigned. "Keep" means the *idea* su
 | JWT | Signs `user.id` (undefined) and expires in 60 min | Signs `uuid` + role, config-driven expiry | Change |
 | Superadmin creates admins | `POST /auth/register` | `POST /api/users` | Keep |
 | Invites | None | Email invites: guest claim, team join, staff assignment, with accept/decline | New |
-| Public profiles | None | Profile page with participation, stats, achievements and badges | New |
+| Public profiles | None | Profile page with participation history (team, tournament, position, goals), stats, achievements and badges | New |
+| Positions | One `position` ENUM per player record | `positions` master table + multiple positions per user + position per team membership | Change |
+| Password reset | None | Email OTP | New |
 
 ## 2. Tournaments
 | Area | v1 | v2 | Type |
@@ -80,12 +82,10 @@ v2 uses a fresh schema, so every table is redesigned. "Keep" means the *idea* su
 | Area | v1 | v2 | Type |
 |---|---|---|---|
 | Home / tournaments / matches / live / points table | Exist | Keep, redesigned around search and multiple tournaments | Keep |
-| Committee page | Hard-coded college committee with photos | **To decide** (see below) | ? |
+| Committee page | Hard-coded college committee with photos | Removed; organizer/tournament info shown under each tournament | Remove |
 | Image uploads | Unauthenticated, raw files | Authenticated, processed with sharp (WebP, resized) | Change |
 | Dashboard endpoint | Unused | Remove | Remove |
 
-## 9. To decide
-1. **Committee page**: remove it, keep it as a static page, or replace it with an organizer/tournament info section?
-2. **Password reset**: "forgot password" via email OTP is assumed to be needed. Confirm.
-3. **Tournament status lifecycle**: confirm the states and who moves the tournament between them.
-4. **Fixtures**: should only **confirmed** (paid) teams be allowed in fixtures?
+## 9. Decided later (at implementation)
+1. Which tournament status transitions are automatic by date.
+2. Whether only confirmed (paid) teams can be put in fixtures.

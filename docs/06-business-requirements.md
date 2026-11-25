@@ -8,7 +8,10 @@ v2 starts with a **fresh database and schema**. No v1 data is migrated.
 - A multi-tournament platform: many tournaments run at the same time, each managed by an **organizer**.
 - The public can browse and **search tournaments by name, place or area**, including location-based ("near me") listing.
 - Individuals have **reusable profiles** (player, scorer, media operator) that are independent of any single tournament or team.
-- Verified people get a **public profile** with past participation, statistics and achievements.
+- Verified people get a **public profile** with past participation, statistics and achievements (see 2.4).
+- Every person has a normal public login. Extra permissions come only from being included in a tournament or team.
+- Users can reset a forgotten password via **email OTP**.
+- All organizer and tournament information is shown **under the tournament** (the v1 static committee page is removed).
 
 ## 2. Users, roles and identity
 ### 2.1 One user table
@@ -48,6 +51,12 @@ v2 starts with a **fresh database and schema**. No v1 data is migrated.
 - Prompting a guest to verify happens through an **email invite**, and through a "verify your account to continue" message on login or dashboard actions.
 - If someone tries to add a guest whose email already belongs to a **verified** user, the system does **not** silently swap them. It shows a message suggesting the existing verified user instead.
 
+### 2.4 Playing positions & public player profile
+- Positions are a **master list** (table `positions`, seeded: Goalkeeper, Defender, Midfielder, Striker, …).
+- A player can have **multiple positions** on their profile (`user_positions`, with one marked primary).
+- When a player joins a team, the **position for that team** is selected and stored on the membership.
+- Public profile page (`/players/:playerId`) shows personal info, positions, career totals (goals, matches, wins, achievements) and a **participation history**: one row per team membership, e.g. *Team A — Tournament B — Striker — 4 goals*.
+
 ## 3. Tournament management
 - **Admin** creates organizer accounts. An organizer can have many tournaments.
 - **Admin** creates each tournament under an organizer, fills only the **basic details**, and decides whether **live streaming** is enabled for it.
@@ -57,6 +66,7 @@ v2 starts with a **fresh database and schema**. No v1 data is migrated.
 - Organizer adds **teams**, and assigns each team's **captain** at creation (a verified player or guest). The captain cannot be changed later.
 - Organizer creates **match fixtures** and manages schedules and timings.
 - Tournaments store the location data needed for location search and "near me" listing (exact fields decided in planning).
+- **Status lifecycle**: Draft → Registration open → Ongoing → Completed. Both **admin and organizer** can change it; some transitions may be automatic by date (decided at implementation).
 
 ## 4. Teams and squads
 - The **captain manages the team squad** (adds and removes players: verified or guest).
@@ -84,4 +94,8 @@ v2 starts with a **fresh database and schema**. No v1 data is migrated.
 - Media gallery for media operators
 
 ## 8. Open points
-- Match events, stats and achievements list (section 6), decided at implementation time.
+- Match events, stats and achievements list (section 6).
+- Which status transitions happen automatically by date.
+- Whether only confirmed (paid) teams can be put in fixtures.
+- Whether a player's team position must be one of their profile positions (guests have none yet).
+- Whether "matches played" needs per-match lineups or is derived from team matches.
