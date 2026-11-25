@@ -82,6 +82,8 @@ v2 uses a fresh schema, so every table is redesigned. "Keep" means the *idea* su
 | Area | v1 | v2 | Type |
 |---|---|---|---|
 | Home / tournaments / matches / live / points table | Exist | Keep, redesigned around search and multiple tournaments | Keep |
+| Tournament page | Tournament list with teams only | Full public tournament page (overview, teams, fixtures, table, stats, live) | Change |
+| Team page | Player list only | Public team page (captain, squad, matches, results, standing) | Change |
 | Committee page | Hard-coded college committee with photos | Removed; organizer/tournament info shown under each tournament | Remove |
 | Image uploads | Unauthenticated, raw files | Authenticated, processed with sharp (WebP, resized) | Change |
 | Dashboard endpoint | Unused | Remove | Remove |

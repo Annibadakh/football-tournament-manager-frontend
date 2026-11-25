@@ -55,7 +55,18 @@ v2 starts with a **fresh database and schema**. No v1 data is migrated.
 - Positions are a **master list** (table `positions`, seeded: Goalkeeper, Defender, Midfielder, Striker, …).
 - A player can have **multiple positions** on their profile (`user_positions`, with one marked primary).
 - When a player joins a team, the **position for that team** is selected and stored on the membership.
-- Public profile page (`/players/:playerId`) shows personal info, positions, career totals (goals, matches, wins, achievements) and a **participation history**: one row per team membership, e.g. *Team A — Tournament B — Striker — 4 goals*.
+  - **Verified player**: must pick one of their own profile positions.
+  - **Guest**: the captain picks any position, and it is **auto-added** to the guest's profile positions.
+- Public profile page (`/players/:playerId`, non-guessable id) shows personal info, positions, career totals (goals, matches, wins, achievements) and a **participation history**: one row per team membership, e.g. *Team A — Tournament B — Striker — 4 goals*.
+- **No match lineups.** A squad has only playing and substitute players (no standby/bench), so the **whole squad counts as having played** every match of their team. Matches played and wins for a player come from their team's matches.
+
+### 2.5 Public pages
+| Page | Shows |
+|---|---|
+| **Player** `/players/:playerId` | As described in 2.4 |
+| **Tournament** `/tournaments/:tournamentId` | Overview (organizer, location, dates, format, fee, status), teams, fixtures and results, points table, top scorers and stats, live match and stream (if enabled), achievements/awards |
+| **Team** `/teams/:teamId` | Tournament, captain, squad with positions and verified/guest badges, matches played with results, goals for/against, standing in the points table |
+| **Tournament list / search** | Search by name, place, area and near me |
 
 ## 3. Tournament management
 - **Admin** creates organizer accounts. An organizer can have many tournaments.
@@ -97,5 +108,3 @@ v2 starts with a **fresh database and schema**. No v1 data is migrated.
 - Match events, stats and achievements list (section 6).
 - Which status transitions happen automatically by date.
 - Whether only confirmed (paid) teams can be put in fixtures.
-- Whether a player's team position must be one of their profile positions (guests have none yet).
-- Whether "matches played" needs per-match lineups or is derived from team matches.
