@@ -1,6 +1,7 @@
 # Business Requirements (Core Pillars)
 
 Status: **Agreed core requirements** (2026-11-23, open points resolved). This document covers the pillars and core rules only, not every detail.
+This file holds only the **core business rules** that define the application flow. Minor rules are added module by module during implementation.
 Details are decided during feature planning and implementation. Open points are listed at the end.
 v2 starts with a **fresh database and schema**. No v1 data is migrated.
 
@@ -49,6 +50,8 @@ v2 starts with a **fresh database and schema**. No v1 data is migrated.
 - **Guest invite**: every guest gets an email invite. The same invite link is how they claim and verify their account.
 - **Claiming a guest account**: the guest verifies **the same user record**, so all history is kept. They verify their email with an **OTP** (email service) and add a **phone number** (unique, required, but **not OTP-verified yet**; SMS/WhatsApp OTP comes later).
 - Prompting a guest to verify happens through an **email invite**, and through a "verify your account to continue" message on login or dashboard actions.
+- **Privacy**: contact details (email, phone) are **never shown publicly** for anyone, verified or guest. Public pages show **age**, never the date of birth.
+- **Duplicates**: a different email creates a separate profile (accepted). Verified profiles require a unique **phone number**. Document proof upload may be added later.
 - If someone tries to add a guest whose email already belongs to a **verified** user, the system does **not** silently swap them. It shows a message suggesting the existing verified user instead.
 
 ### 2.4 Playing positions & public player profile
@@ -106,15 +109,29 @@ v2 starts with a **fresh database and schema**. No v1 data is migrated.
     - Streams can be added before the event and edited or removed later.
     - The YouTube channel must allow **embedding**, otherwise the preview falls back to a "Watch on YouTube" link.
   - Phase 2 (future): streaming inside the app.
+- **Match statuses**: Scheduled, Live, Completed, Cancelled, **Walkover**, **Forfeit**. There is no postponed or abandoned status. The result rules for walkover and forfeit are defined in the match module.
+- **Score updates happen only while the match is live.** Every scorer action (each click: goal, card, undo) is stored in a **match log** with who, when and what. Once the result is declared, scores are **locked** and cannot be edited.
+- **Tied matches (knockout)**: only what was actually used is recorded: decided in regular time, **extra time**, **penalties**, or a **tie**. For extra time and penalties the scorer enters the final result (win/loss) directly. Penalty shootout scores are not stored and never count as goals.
+- **Cards**: yellow and red cards are recorded as match events. There is **no automatic suspension**. The system **notifies the scorer/organizer** when a player meets a suspension condition, and they decide.
+- **Rule book**: a master `rules` table holds rules with a title and description. It powers a **rule book** shown to teams and players, and the suspension notices refer to it.
+- **Player of the Match**: planned. Details are discussed in the match module.
 - Match events, statistics and achievements cover what a proper football tournament manager needs. The exact list is defined at implementation time and drives the public profiles.
 
-## 7. Future scope (not in the first v2 release)
+## 7. Considerations for implementation
+Agreed to be designed in when each module is built:
+- **Tournament module**: categories (game format, age group, gender), multiple grounds with clash warnings, fixture generator, registration deadline and squad min/max rules.
+- **Communication**: email notifications (invites, receipts, schedule changes), an in-app notification list, and shareable public links with WhatsApp previews and readable slugs.
+- **Technical**: cloud file storage, an email provider with secure OTPs (hashed, expiring, rate-limited), access + refresh tokens (httpOnly cookie), a live-score API ready for Socket.IO, soft delete and audit columns, UTC storage with IST display, tests + CI + error monitoring, mobile-first design and PWA.
+
+## 8. Future scope (not in the first v2 release)
 - Public viewer login (reviews, polls, etc.)
 - Phone OTP verification (SMS/WhatsApp)
 - In-app live streaming
 - Media gallery for media operators
 
-## 8. Open points
+## 9. Open points
 - Match events, stats and achievements list (section 6).
+- Player of the Match rules.
+- Whether rules are platform-wide only, or tournaments can pick or add their own.
 - Which status transitions happen automatically by date.
 - Whether only confirmed (paid) teams can be put in fixtures.
