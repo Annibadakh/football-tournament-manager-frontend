@@ -50,7 +50,7 @@ The same philosophy applies to the backend (`football-tournament-manager-backend
 | Constants | UPPER_SNAKE_CASE | `MAX_TEAM_SIZE` |
 | Database tables | snake_case | `tournament_teams` |
 | Database columns | snake_case | `created_at` |
-| API endpoints | kebab-case, plural resource nouns | `/api/team-members` |
+| API endpoints | kebab-case, plural resource nouns | `/api/v1/team-members` |
 | Boolean variables | `is` / `has` / `can` prefix | `isActive` |
 | React components | PascalCase file and name (React convention) | `TeamCard.jsx` |
 | Hooks | `use` prefix | `useDebounce.js` |

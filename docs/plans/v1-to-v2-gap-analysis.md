@@ -15,7 +15,7 @@ v2 uses a fresh schema, so every table is redesigned. "Keep" means the *idea* su
 | Captain account | Auto-created with **password = email** | Captain is a member (verified or guest) and is invited by email | Change |
 | Login | Email + password + **role dropdown** | Email + password. Role comes from the account, assignments loaded after login | Change |
 | JWT | Signs `user.id` (undefined) and expires in 60 min | Signs `uuid` + role, config-driven expiry | Change |
-| Superadmin creates admins | `POST /auth/register` | `POST /api/users` | Keep |
+| Superadmin creates admins | `POST /auth/register` | `POST /api/v1/users` | Keep |
 | Invites | None | Email invites: guest claim, team join, staff assignment, with accept/decline | New |
 | Public profiles | None | Profile page with participation history (team, tournament, position, goals), stats, achievements and badges | New |
 | Positions | One `position` ENUM per player record | `positions` master table + multiple positions per user + position per team membership | Change |
