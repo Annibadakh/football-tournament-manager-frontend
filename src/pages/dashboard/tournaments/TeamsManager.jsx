@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Check, Lock, Plus, X } from "lucide-react";
+import { Check, Lock, Plus, ShieldCheck, X } from "lucide-react";
+import OfflinePaymentModal from "@/components/payment/OfflinePaymentModal";
+import PaymentStatusBadge from "@/components/payment/PaymentStatusBadge";
+import ReceiptActions from "@/components/payment/ReceiptActions";
 import AddTeamModal from "@/components/team/AddTeamModal";
 import RejectRequestModal from "@/components/team/RejectRequestModal";
 import TeamStatusBadge from "@/components/team/TeamStatusBadge";
@@ -11,8 +14,10 @@ import EmptyState from "@/components/ui/EmptyState";
 import Select from "@/components/ui/Select";
 import Skeleton from "@/components/ui/Skeleton";
 import { buildPath, ROUTES } from "@/constants/routes.constants";
+import { paymentMethodLabel } from "@/constants/payment.constants";
 import { REVIEW_DECISION, TEAM_STATUS, TEAM_STATUS_OPTIONS } from "@/constants/team.constants";
 import { listTournamentTeams, reviewTeam } from "@/services/team.service";
+import { formatCurrency } from "@/utils/number";
 
 // Organizer view of every team and request in a tournament
 const TeamsManager = ({ tournament }) => {
@@ -22,6 +27,7 @@ const TeamsManager = ({ tournament }) => {
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [rejecting, setRejecting] = useState(null);
   const [approvingId, setApprovingId] = useState(null);
+  const [recordingFor, setRecordingFor] = useState(null);
 
   useEffect(() => {
     listTournamentTeams(tournament.slug, status ? { status } : {}).then((res) =>
@@ -97,13 +103,32 @@ const TeamsManager = ({ tournament }) => {
                       Locked
                     </Badge>
                   )}
-                  Captain {team.captain?.fullName} · {team.squadCount} players
+                  Captain {team.captain?.fullName} · {team.squadCount}{" "}
+                  {team.squadCount === 1 ? "player" : "players"}
                   {team.requestNumber && ` · request ${team.requestNumber} of 2`}
                 </p>
                 {team.rejectionReason && (
                   <p className="text-xs text-fg-muted">Reason: {team.rejectionReason}</p>
                 )}
+                {team.latestPayment && (
+                  <p className="mt-1 flex flex-wrap items-center gap-2 text-xs text-fg-muted">
+                    <PaymentStatusBadge status={team.latestPayment.status} />
+                    {formatCurrency(team.latestPayment.amount)} ·{" "}
+                    {paymentMethodLabel(team.latestPayment)} · {team.latestPayment.receiptNumber}
+                  </p>
+                )}
               </div>
+              {team.latestPayment && <ReceiptActions payment={team.latestPayment} />}
+              {team.status === TEAM_STATUS.AWAITING_PAYMENT && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setRecordingFor(team)}
+                  startIcon={<ShieldCheck className="size-4" />}
+                >
+                  Record payment
+                </Button>
+              )}
               {team.status === TEAM_STATUS.PENDING_APPROVAL && (
                 <div className="flex gap-2">
                   <Button
@@ -135,6 +160,17 @@ const TeamsManager = ({ tournament }) => {
         tournamentId={tournament.slug}
         onAdded={reload}
       />
+      {recordingFor && (
+        <OfflinePaymentModal
+          team={recordingFor}
+          entryFee={tournament.entryFee}
+          onClose={() => setRecordingFor(null)}
+          onRecorded={() => {
+            setRecordingFor(null);
+            reload();
+          }}
+        />
+      )}
       {rejecting && (
         <RejectRequestModal
           team={rejecting}

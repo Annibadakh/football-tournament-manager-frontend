@@ -74,4 +74,7 @@ Every screen composes these instead of re-styling raw HTML elements.
 ## Team domain components (`components/team`)
 `TeamStatusBadge`, `PlayerPicker` (search verified players), `PersonField` (verified player or guest by email), `PositionSelect` (limited to the player's own positions), `SquadList`, and the modals `TeamRequestModal`, `AddTeamModal`, `InvitePlayerModal`, `EditPlayerModal`, `RejectRequestModal`, `StaffInviteModal`.
 
+## Payment components (`components/payment`)
+`PaymentCard` (fee breakdown, Pay via Razorpay Checkout, failure notice, receipts), `PaymentStatusBadge`, `ReceiptActions` (View opens the PDF in a new tab; Download saves `<receipt no>.pdf`; both fetch with the auth header) and `OfflinePaymentModal`. Checkout is loaded on demand by `utils/razorpay`.
+
 More components will be added as features need them. Update this file when one is added or its API changes.

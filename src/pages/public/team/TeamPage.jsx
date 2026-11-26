@@ -12,6 +12,8 @@ import {
   Users,
   X,
 } from "lucide-react";
+import OfflinePaymentModal from "@/components/payment/OfflinePaymentModal";
+import PaymentCard from "@/components/payment/PaymentCard";
 import EditPlayerModal from "@/components/team/EditPlayerModal";
 import InvitePlayerModal from "@/components/team/InvitePlayerModal";
 import RejectRequestModal from "@/components/team/RejectRequestModal";
@@ -36,7 +38,7 @@ import * as teamService from "@/services/team.service";
 const STATUS_NOTES = {
   [TEAM_STATUS.PENDING_APPROVAL]: "Waiting for the organizer to review this request.",
   [TEAM_STATUS.AWAITING_PAYMENT]:
-    "Approved. The team is confirmed once the entry fee is paid or the organizer confirms it.",
+    "Approved. The team is confirmed once the entry fee is paid online or the organizer records an offline payment.",
   [TEAM_STATUS.REJECTED]: "This request was not approved.",
   [TEAM_STATUS.WITHDRAWN]: "The captain withdrew this team.",
   [TEAM_STATUS.REMOVED]: "The organizer removed this team from the tournament.",
@@ -138,13 +140,6 @@ const TeamPage = () => {
       run: () =>
         runAction(() => teamService.reviewTeam(team.id, { decision: REVIEW_DECISION.APPROVE })),
     },
-    confirm: {
-      title: "Confirm this team?",
-      message: "Use this when the entry fee was paid offline.",
-      confirmText: "Confirm team",
-      variant: "primary",
-      run: () => runAction(() => teamService.confirmTeam(team.id)),
-    },
   };
   const pending = confirmAction && confirmations[confirmAction.type];
 
@@ -225,10 +220,10 @@ const TeamPage = () => {
             )}
             {team.status === TEAM_STATUS.AWAITING_PAYMENT && (
               <Button
-                onClick={() => setConfirmAction({ type: "confirm" })}
+                onClick={() => setModal({ type: "offline" })}
                 startIcon={<ShieldCheck className="size-4" />}
               >
-                Confirm team
+                Record payment
               </Button>
             )}
             {team.status === TEAM_STATUS.CONFIRMED && (
@@ -274,6 +269,16 @@ const TeamPage = () => {
         </div>
       )}
 
+      {(isCaptain || isManager) && (
+        <PaymentCard
+          team={team}
+          isCaptain={isCaptain}
+          isManager={isManager}
+          onTeamChanged={reload}
+          onRecordOffline={() => setModal({ type: "offline" })}
+        />
+      )}
+
       <Card
         title="Squad"
         subtitle={<SquadProgress team={team} />}
@@ -317,6 +322,17 @@ const TeamPage = () => {
           member={modal.member}
           onClose={() => setModal(null)}
           onSaved={() => {
+            setModal(null);
+            reload();
+          }}
+        />
+      )}
+      {modal?.type === "offline" && (
+        <OfflinePaymentModal
+          team={team}
+          entryFee={team.tournament.entryFee}
+          onClose={() => setModal(null)}
+          onRecorded={() => {
             setModal(null);
             reload();
           }}

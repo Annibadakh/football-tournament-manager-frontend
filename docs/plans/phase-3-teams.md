@@ -1,6 +1,6 @@
 # Phase 3: Staff, Teams & Squads (module plan)
 
-Status: **In progress** (decisions confirmed 2026-11-27). Part of `plans/implementation-plan.md`.
+Status: **Done** (decisions confirmed 2026-11-27). Part of `plans/implementation-plan.md`.
 Goal: tournaments get teams (added by the organizer or requested by captains), squads built by captains through email invites, and scorers/media operators assigned through invites. Payments come in Phase 4. This phase prepares the "awaiting payment" state.
 
 ## Team lifecycle

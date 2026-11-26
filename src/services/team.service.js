@@ -18,9 +18,6 @@ export const updateTeam = (teamId, data) =>
 export const reviewTeam = (teamId, data) =>
   request({ method: "patch", url: `/teams/${teamId}/review`, data });
 
-export const confirmTeam = (teamId) =>
-  request({ method: "patch", url: `/teams/${teamId}/confirmation` });
-
 export const setTeamLock = (teamId, isLocked) =>
   request({ method: "patch", url: `/teams/${teamId}/lock`, data: { isLocked } });
 
