@@ -124,6 +124,8 @@ Agreed to be designed in when each module is built:
 - **Technical**: cloud file storage, an email provider with secure OTPs (hashed, expiring, rate-limited), access + refresh tokens (httpOnly cookie), a live-score API ready for Socket.IO, soft delete and audit columns, UTC storage with IST display, tests + CI + error monitoring, mobile-first design and PWA.
 
 ## 8. Future scope (not in the first v2 release)
+- **Home feeds and CMS** (last phase): algorithmic ongoing/upcoming/completed tournaments and players by location and globally, plus CMS posters, announcements and external ads with location targeting (see `plans/future-feeds-and-cms.md`).
+- Locations come from **Google Places** (stored as `places` rows referenced by place ID).
 - Public viewer login (reviews, polls, etc.)
 - Phone OTP verification (SMS/WhatsApp)
 - In-app live streaming

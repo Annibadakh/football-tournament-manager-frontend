@@ -26,7 +26,8 @@ All work is on the `version-2` branch of both repos. Fresh database, no v1 data 
 | `auth_otps` | user_id, purpose, code_hash, expires_at, attempts, consumed_at | Purposes: EMAIL_VERIFY, PASSWORD_RESET. Hashed, expiring, attempt-limited |
 | `refresh_tokens` | user_id, token_hash, expires_at, revoked_at, user_agent | httpOnly cookie sessions |
 | `invites` | token_hash, type, invited_user_id, invited_by, tournament_id, team_id, staff_role, position_id, status, expires_at | Types: GUEST_CLAIM, TEAM_JOIN, STAFF_ASSIGN. Status: PENDING, ACCEPTED, DECLINED, EXPIRED |
-| `tournaments` | uuid, slug, organizer_id, name, description, logo_url, banner_url, status, format, is_streaming_enabled, entry_fee, start_date, end_date, registration_deadline, team/squad limits, points_win/draw/loss, venue, area, city, district, state, pincode, latitude, longitude | Admin fills the basic fields and the streaming flag; the organizer fills the rest. Indexes: organizer_id, status, city, area, (latitude, longitude) |
+| `places` | google_place_id, name, formatted_address, area, city, district, state, pincode, latitude, longitude, location (POINT SRID 4326), details_fetched_at | From Google Places. Spatial index on location. Referenced by tournaments, teams, users (city) and CMS |
+| `tournaments` | uuid, slug, organizer_id, venue_place_id, visibility, published_at, name, description, logo_url, banner_url, status, format, is_streaming_enabled, entry_fee, start_date, end_date, registration_deadline, team/squad limits, points_win/draw/loss, venue, area, city, district, state, pincode, latitude, longitude | Admin fills the basic fields and the streaming flag; the organizer fills the rest. Indexes: organizer_id, status, city, area, (latitude, longitude) |
 | `tournament_staff` | tournament_id, user_id, staff_role, status | staff_role: SCORER, MEDIA_OPERATOR. Max 2 each (enforced in the service). unique (tournament_id, user_id, staff_role) |
 | `teams` | uuid, tournament_id, name, logo_url, captain_user_id, status, is_squad_locked, confirmed_at, confirmed_by | Status: PENDING_PAYMENT, CONFIRMED (…). The captain is fixed after creation |
 | `team_members` | team_id, tournament_id, user_id, position_id, is_captain, jersey_number, status | **unique (tournament_id, user_id)**: one team per tournament. unique (team_id, jersey_number). The captain is the first member |
@@ -73,6 +74,9 @@ Player page (personal info without contact details, positions, career totals, pa
 
 ### Phase 8: Notifications & launch readiness
 In-app notifications + email notifications (invites, receipts, schedule changes). PWA. Error monitoring. Test coverage for points, standings, payments and permissions. CI (lint + tests). Staging and production deployment.
+
+### Phase 9: Home feeds & CMS (last)
+Algorithmic home feeds (ongoing / upcoming / recently completed tournaments and players, near the user and global) and a CMS for posters, announcements and external ads, with location targeting and scheduling. Earlier phases store the data it needs (see `plans/future-feeds-and-cms.md`).
 
 ## Dependency order
 ```
