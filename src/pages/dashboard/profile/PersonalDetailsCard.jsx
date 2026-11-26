@@ -2,9 +2,11 @@ import { useDispatch } from "react-redux";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import FormInput from "@/components/ui/FormInput";
+import PlaceSearch from "@/components/ui/PlaceSearch";
 import Select from "@/components/ui/Select";
 import Textarea from "@/components/ui/Textarea";
 import useForm from "@/hooks/useForm";
+import { PLACE_SEARCH_TYPE } from "@/constants/place.constants";
 import { GENDER_OPTIONS, PHONE_PREFIX, USER_RULES } from "@/constants/user.constants";
 import { updateMyProfile } from "@/services/me.service";
 import { setUser } from "@/store/slices/authSlice";
@@ -14,7 +16,7 @@ const toFormValues = (user) => ({
   fullName: user.fullName,
   dateOfBirth: user.dateOfBirth ?? "",
   gender: user.gender,
-  city: user.city ?? "",
+  city: user.city ?? null,
   bio: user.bio ?? "",
 });
 
@@ -23,7 +25,7 @@ const toPayload = (values) => ({
   fullName: values.fullName,
   dateOfBirth: values.dateOfBirth || null,
   gender: values.gender,
-  city: values.city || null,
+  cityPlaceId: values.city?.id ?? null,
   bio: values.bio || null,
 });
 
@@ -82,12 +84,14 @@ const PersonalDetailsCard = ({ user }) => {
           onChange={handleChange}
           error={errors.gender}
         />
-        <FormInput
+        <PlaceSearch
           name="city"
           label="City"
+          type={PLACE_SEARCH_TYPE.CITY}
+          placeholder="Search your town or city"
           value={values.city}
           onChange={handleChange}
-          error={errors.city}
+          error={errors.city ?? errors.cityPlaceId}
         />
         <Textarea
           name="bio"

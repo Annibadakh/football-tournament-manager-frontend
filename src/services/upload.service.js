@@ -14,12 +14,12 @@ export const compressImage = (file, options) =>
  * Two-step upload: the API returns a presigned POST, then the browser sends the file straight to S3.
  * Returns { ok, key } where key is saved on the related record (e.g. photoKey).
  */
-export const uploadFile = async (file, purpose) => {
+export const uploadFile = async (file, purpose, entityId) => {
   const presign = await request(
     {
       method: "post",
       url: "/uploads",
-      data: { purpose, contentType: file.type, size: file.size },
+      data: { purpose, contentType: file.type, size: file.size, entityId },
     },
     { successToast: false },
   );

@@ -65,23 +65,30 @@ const AdminHome = () => (
         Go to users
       </Link>
     </Card>
-    <Card title="Tournaments">
-      <EmptyState
-        icon={Trophy}
-        title="Coming in the next phase"
-        description="You'll create tournaments under organizers here."
-      />
+    <Card title="Tournaments" subtitle="Create tournaments under organizers and track every event">
+      <Link
+        to={ROUTES.MANAGE_TOURNAMENTS}
+        className="inline-flex items-center gap-2 text-sm font-semibold text-link hover:underline"
+      >
+        <Trophy className="size-4" aria-hidden="true" />
+        Go to tournaments
+      </Link>
     </Card>
   </div>
 );
 
 const OrganizerHome = () => (
-  <Card title="Your tournaments">
-    <EmptyState
-      icon={Trophy}
-      title="No tournaments yet"
-      description="An admin will create tournaments for you. They'll appear here to manage."
-    />
+  <Card
+    title="Your tournaments"
+    subtitle="Complete details, add grounds and rules, and open registration"
+  >
+    <Link
+      to={ROUTES.MANAGE_TOURNAMENTS}
+      className="inline-flex items-center gap-2 text-sm font-semibold text-link hover:underline"
+    >
+      <Trophy className="size-4" aria-hidden="true" />
+      Manage my tournaments
+    </Link>
   </Card>
 );
 

@@ -53,10 +53,7 @@ export const profileSchema = z.object({
     .nullable()
     .refine((value) => !value || new Date(value) < new Date(), "Date of birth must be in the past"),
   gender: z.number().nullable(),
-  city: z
-    .string()
-    .trim()
-    .max(USER_RULES.CITY_MAX, `City must be at most ${USER_RULES.CITY_MAX} characters`),
+  city: z.object({ id: z.string() }).nullable(),
   bio: z
     .string()
     .trim()

@@ -31,7 +31,7 @@ export default [
       "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
       "no-unused-vars": ["error", { argsIgnorePattern: "^_", varsIgnorePattern: "^_" }],
       "no-console": ["warn", { allow: ["error"] }],
-      eqeqeq: ["error", "always"],
+      eqeqeq: ["error", "always", { null: "ignore" }],
     },
   },
   {

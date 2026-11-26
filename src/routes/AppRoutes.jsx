@@ -14,11 +14,16 @@ import SignupPage from "@/pages/auth/SignupPage";
 import VerifyAccountPage from "@/pages/auth/VerifyAccountPage";
 import DashboardHomePage from "@/pages/dashboard/home/DashboardHomePage";
 import ProfilePage from "@/pages/dashboard/profile/ProfilePage";
+import RuleBookPage from "@/pages/dashboard/rules/RuleBookPage";
+import ManageTournamentsPage from "@/pages/dashboard/tournaments/ManageTournamentsPage";
+import TournamentEditorPage from "@/pages/dashboard/tournaments/TournamentEditorPage";
 import SecurityPage from "@/pages/dashboard/security/SecurityPage";
 import UsersPage from "@/pages/dashboard/users/UsersPage";
 import NotFoundPage from "@/pages/errors/NotFoundPage";
 import UnauthorizedPage from "@/pages/errors/UnauthorizedPage";
 import HomePage from "@/pages/public/home/HomePage";
+import TournamentDetailsPage from "@/pages/public/tournament-details/TournamentDetailsPage";
+import TournamentsPage from "@/pages/public/tournaments/TournamentsPage";
 import GuestOnlyRoute from "@/routes/GuestOnlyRoute";
 import RoleRoute from "@/routes/RoleRoute";
 
@@ -31,12 +36,15 @@ const DashboardPreviewPage = import.meta.env.DEV
   : null;
 
 const STAFF_ADMIN_ROLES = [ACCOUNT_ROLE.SUPERADMIN, ACCOUNT_ROLE.ADMIN];
+const TOURNAMENT_MANAGER_ROLES = [...STAFF_ADMIN_ROLES, ACCOUNT_ROLE.ORGANIZER];
 
 const AppRoutes = () => (
   <Suspense fallback={<PageLoader />}>
     <Routes>
       <Route element={<PublicLayout />}>
         <Route index element={<HomePage />} />
+        <Route path={ROUTES.TOURNAMENTS} element={<TournamentsPage />} />
+        <Route path={ROUTES.TOURNAMENT} element={<TournamentDetailsPage />} />
         <Route path={ROUTES.UNAUTHORIZED} element={<UnauthorizedPage />} />
         {ComponentShowcasePage && (
           <Route path={ROUTES.DEV_COMPONENTS} element={<ComponentShowcasePage />} />
@@ -63,6 +71,11 @@ const AppRoutes = () => (
           <Route path={ROUTES.SECURITY} element={<SecurityPage />} />
           <Route element={<RoleRoute allowedRoles={STAFF_ADMIN_ROLES} />}>
             <Route path={ROUTES.USERS} element={<UsersPage />} />
+            <Route path={ROUTES.RULE_BOOK} element={<RuleBookPage />} />
+          </Route>
+          <Route element={<RoleRoute allowedRoles={TOURNAMENT_MANAGER_ROLES} />}>
+            <Route path={ROUTES.MANAGE_TOURNAMENTS} element={<ManageTournamentsPage />} />
+            <Route path={ROUTES.MANAGE_TOURNAMENT} element={<TournamentEditorPage />} />
           </Route>
         </Route>
       </Route>
