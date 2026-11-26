@@ -1,12 +1,14 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { CheckCircle2, Circle, Trophy, UserPlus, Users } from "lucide-react";
+import { CheckCircle2, Circle, Trophy, UserPlus } from "lucide-react";
 import Card from "@/components/ui/Card";
-import EmptyState from "@/components/ui/EmptyState";
 import PageHeader from "@/components/ui/PageHeader";
 import { ROUTES } from "@/constants/routes.constants";
 import { ACCOUNT_ROLE, ACCOUNT_ROLE_LABEL } from "@/constants/user.constants";
 import { selectCurrentUser } from "@/store/slices/authSlice";
+import InvitationsCard from "@/pages/dashboard/home/InvitationsCard";
+import MyTeamsCard from "@/pages/dashboard/home/MyTeamsCard";
 
 const getProfileChecklist = (user) => [
   { label: "Add a profile photo", isDone: Boolean(user.photoUrl) },
@@ -17,10 +19,13 @@ const getProfileChecklist = (user) => [
 
 const MemberHome = ({ user }) => {
   const checklist = getProfileChecklist(user);
+  // Accepting an invitation adds a team, so My teams refreshes after a response
+  const [teamsReloadKey, setTeamsReloadKey] = useState(0);
   const doneCount = checklist.filter((item) => item.isDone).length;
 
   return (
     <div className="grid gap-6 lg:grid-cols-2">
+      <InvitationsCard onResponded={() => setTeamsReloadKey((key) => key + 1)} />
       <Card
         title="Complete your profile"
         subtitle={`${doneCount} of ${checklist.length} done · teams see this when they add you`}
@@ -43,13 +48,7 @@ const MemberHome = ({ user }) => {
           ))}
         </ul>
       </Card>
-      <Card title="My teams">
-        <EmptyState
-          icon={Users}
-          title="No teams yet"
-          description="When a captain adds you to a team, it shows up here."
-        />
-      </Card>
+      <MyTeamsCard reloadKey={teamsReloadKey} />
     </div>
   );
 };

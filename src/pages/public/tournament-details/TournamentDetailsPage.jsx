@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 import {
   CalendarClock,
   CalendarDays,
@@ -8,22 +9,27 @@ import {
   Phone,
   Radio,
   ScrollText,
+  Shield,
   Trophy,
   Users,
 } from "lucide-react";
 import logoIcon from "@/assets/brand/maidaan-icon.svg";
+import TeamRequestModal from "@/components/team/TeamRequestModal";
 import TournamentStatusBadge from "@/components/tournament/TournamentStatusBadge";
+import Button from "@/components/ui/Button";
 import Avatar from "@/components/ui/Avatar";
 import Badge from "@/components/ui/Badge";
 import Card from "@/components/ui/Card";
 import EmptyState from "@/components/ui/EmptyState";
 import PageLoader from "@/components/ui/PageLoader";
 import { buildMapsUrl } from "@/constants/place.constants";
-import { ROUTES } from "@/constants/routes.constants";
-import { TOURNAMENT_FORMAT_LABEL } from "@/constants/tournament.constants";
-import { PHONE_PREFIX } from "@/constants/user.constants";
+import { buildPath, ROUTES } from "@/constants/routes.constants";
+import { TOURNAMENT_FORMAT_LABEL, TOURNAMENT_STATUS } from "@/constants/tournament.constants";
+import { ACCOUNT_ROLE, ACCOUNT_STATUS, PHONE_PREFIX } from "@/constants/user.constants";
+import { listTournamentTeams } from "@/services/team.service";
 import { getTournament, listGrounds, listTournamentRules } from "@/services/tournament.service";
-import { formatDate } from "@/utils/date";
+import { selectCurrentUser } from "@/store/slices/authSlice";
+import { formatDate, todayIsoDate } from "@/utils/date";
 import { formatCategories, formatDateRange, formatEntryFee } from "@/utils/tournament";
 
 const Fact = ({ icon: Icon, label, value }) => (
@@ -49,9 +55,92 @@ const PlaceLink = ({ place }) => (
   </a>
 );
 
+// Registration is open until the deadline day ends (dates are calendar days)
+const isRegistrationOpen = (tournament) =>
+  tournament.status === TOURNAMENT_STATUS.REGISTRATION_OPEN &&
+  (!tournament.registrationDeadline || tournament.registrationDeadline >= todayIsoDate());
+
+const RegisterTeamButton = ({ tournament }) => {
+  const location = useLocation();
+  const user = useSelector(selectCurrentUser);
+  const [isOpen, setIsOpen] = useState(false);
+
+  if (!isRegistrationOpen(tournament)) return null;
+  if (!user) {
+    return (
+      <Link
+        to={ROUTES.LOGIN}
+        state={{ from: location }}
+        className="inline-flex h-10 items-center rounded-lg bg-accent-500 px-4 text-sm font-semibold text-ink-950 hover:bg-accent-400"
+      >
+        Log in to register your team
+      </Link>
+    );
+  }
+  if (user.accountRole !== ACCOUNT_ROLE.MEMBER) return null;
+  // Unverified players finish verification first instead of hitting an API error
+  if (user.accountStatus !== ACCOUNT_STATUS.VERIFIED) {
+    return (
+      <Link
+        to={ROUTES.VERIFY_ACCOUNT}
+        className="inline-flex h-10 items-center rounded-lg bg-accent-500 px-4 text-sm font-semibold text-ink-950 hover:bg-accent-400"
+      >
+        Verify your account to register a team
+      </Link>
+    );
+  }
+  return (
+    <>
+      <Button
+        variant="accent"
+        onClick={() => setIsOpen(true)}
+        startIcon={<Shield className="size-4" />}
+      >
+        Register your team
+      </Button>
+      <TeamRequestModal open={isOpen} onClose={() => setIsOpen(false)} tournament={tournament} />
+    </>
+  );
+};
+
+const TeamsCard = ({ teams }) => (
+  <Card title="Teams" subtitle={`${teams.length} confirmed`}>
+    {teams.length === 0 ? (
+      <p className="text-sm text-fg-muted">No confirmed teams yet.</p>
+    ) : (
+      <ul className="grid gap-2 sm:grid-cols-2">
+        {teams.map((team) => (
+          <li key={team.id}>
+            <Link
+              to={buildPath(ROUTES.TEAM, { teamId: team.id })}
+              className="flex items-center gap-3 rounded-lg border border-line px-3 py-2 hover:bg-surface-muted"
+            >
+              <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-brand-700 text-xs font-bold text-white">
+                {team.shortName}
+              </span>
+              <span className="min-w-0">
+                <span className="block truncate font-semibold text-fg">{team.name}</span>
+                <span className="block text-xs text-fg-muted">
+                  {team.squadCount} players · Captain {team.captain?.fullName}
+                </span>
+              </span>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    )}
+  </Card>
+);
+
 const TournamentDetailsPage = () => {
   const { tournamentId } = useParams();
-  const [state, setState] = useState({ isLoading: true, tournament: null, grounds: [], rules: [] });
+  const [state, setState] = useState({
+    isLoading: true,
+    tournament: null,
+    grounds: [],
+    rules: [],
+    teams: [],
+  });
 
   useEffect(() => {
     let isCurrent = true;
@@ -60,13 +149,15 @@ const TournamentDetailsPage = () => {
       getTournament(tournamentId, { errorToast: false }),
       listGrounds(tournamentId),
       listTournamentRules(tournamentId),
-    ]).then(([tournamentRes, groundsRes, rulesRes]) => {
+      listTournamentTeams(tournamentId),
+    ]).then(([tournamentRes, groundsRes, rulesRes, teamsRes]) => {
       if (!isCurrent) return;
       setState({
         isLoading: false,
         tournament: tournamentRes.ok ? tournamentRes.data : null,
         grounds: groundsRes.ok ? groundsRes.data : [],
         rules: rulesRes.ok ? rulesRes.data : [],
+        teams: teamsRes.ok ? teamsRes.data : [],
       });
     });
     return () => {
@@ -75,7 +166,7 @@ const TournamentDetailsPage = () => {
   }, [tournamentId]);
 
   if (state.isLoading) return <PageLoader label="Loading tournament..." />;
-  const { tournament, grounds, rules } = state;
+  const { tournament, grounds, rules, teams } = state;
   if (!tournament) {
     return (
       <EmptyState
@@ -120,6 +211,9 @@ const TournamentDetailsPage = () => {
             </div>
             <h1 className="mt-2 text-3xl leading-tight text-fg sm:text-4xl">{tournament.name}</h1>
             {categories && <p className="mt-1 text-fg-muted">{categories}</p>}
+          </div>
+          <div className="sm:pt-4">
+            <RegisterTeamButton tournament={tournament} />
           </div>
         </div>
 
@@ -176,6 +270,8 @@ const TournamentDetailsPage = () => {
                 </p>
               )}
             </Card>
+
+            <TeamsCard teams={teams} />
 
             <Card title="Rule book" subtitle={`${rules.length} rules`}>
               {rules.length === 0 ? (

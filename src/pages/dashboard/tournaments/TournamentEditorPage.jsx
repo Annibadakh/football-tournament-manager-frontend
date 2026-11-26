@@ -21,10 +21,14 @@ import { selectCurrentUser } from "@/store/slices/authSlice";
 import { apiErrorsToFieldErrors } from "@/utils/form";
 import GroundsEditor from "@/pages/dashboard/tournaments/GroundsEditor";
 import RuleBookEditor from "@/pages/dashboard/tournaments/RuleBookEditor";
+import StaffManager from "@/pages/dashboard/tournaments/StaffManager";
+import TeamsManager from "@/pages/dashboard/tournaments/TeamsManager";
 import TournamentDetailsForm from "@/pages/dashboard/tournaments/TournamentDetailsForm";
 
 const TABS = [
   { value: "details", label: "Details" },
+  { value: "teams", label: "Teams" },
+  { value: "staff", label: "Staff" },
   { value: "grounds", label: "Grounds" },
   { value: "rules", label: "Rule book" },
 ];
@@ -135,6 +139,8 @@ const TournamentEditorPage = () => {
           onSaved={handleSaved}
         />
       )}
+      {tab === "teams" && <TeamsManager tournament={tournament} />}
+      {tab === "staff" && <StaffManager tournament={tournament} />}
       {tab === "grounds" && <GroundsEditor tournamentId={tournament.slug} />}
       {tab === "rules" && <RuleBookEditor tournamentId={tournament.slug} />}
       <ConfirmDialog

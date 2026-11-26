@@ -56,6 +56,8 @@ Every screen composes these instead of re-styling raw HTML elements.
 |---|---|---|
 | **Loader** | P1 | `Spinner` (inline, `size`), `PageLoader` (full area) and `Skeleton` (block or line placeholders) |
 | **Modal** | P1 | `open`, `onClose`, `title`, `size` (`sm, md, lg, full`), `footer`. Rendered through a portal, closes on Esc or overlay click (configurable), traps focus and locks body scroll |
+| **FormModal** | P1 | Modal with a `<form>` body and Cancel/Submit footer: `title`, `submitText`, `submitVariant`, `isSubmitting`, `onSubmit`, `size`. Used by all create/edit dialogs |
+| **DropdownPortal** | P1 | Renders a dropdown panel on `<body>` with fixed positioning measured from `anchorRef`, so Select and PlaceSearch panels are not clipped by modals or scroll containers. Click-outside checks must include its `panelRef` |
 | **ConfirmDialog** | P1 | Built on Modal: `title`, `message`, `confirmText`, `variant="danger"`, `loading`, `onConfirm`. Replaces `window.confirm` |
 | **Toaster** | P1 | sonner `<Toaster />` mounted once in `App`. The API wrapper triggers toasts (see 03) |
 | **Tooltip** | P3 | Hover or focus hint for icon buttons |
@@ -68,5 +70,8 @@ Every screen composes these instead of re-styling raw HTML elements.
 | **DashboardLayout** | P1 | Header, collapsible Sidebar (links filtered by role) and `<Outlet />` |
 | **PageHeader** | P1 | Page title, optional breadcrumb or subtitle, and an actions slot (for example an "Add Team" button) |
 | **RoleRoute** | P1 | Route guard: `allowedRoles`. Redirects to `/login` when there is no session and to an unauthorized page when the role is wrong |
+
+## Team domain components (`components/team`)
+`TeamStatusBadge`, `PlayerPicker` (search verified players), `PersonField` (verified player or guest by email), `PositionSelect` (limited to the player's own positions), `SquadList`, and the modals `TeamRequestModal`, `AddTeamModal`, `InvitePlayerModal`, `EditPlayerModal`, `RejectRequestModal`, `StaffInviteModal`.
 
 More components will be added as features need them. Update this file when one is added or its API changes.

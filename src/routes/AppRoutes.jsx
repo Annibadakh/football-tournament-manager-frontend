@@ -22,6 +22,7 @@ import UsersPage from "@/pages/dashboard/users/UsersPage";
 import NotFoundPage from "@/pages/errors/NotFoundPage";
 import UnauthorizedPage from "@/pages/errors/UnauthorizedPage";
 import HomePage from "@/pages/public/home/HomePage";
+import TeamPage from "@/pages/public/team/TeamPage";
 import TournamentDetailsPage from "@/pages/public/tournament-details/TournamentDetailsPage";
 import TournamentsPage from "@/pages/public/tournaments/TournamentsPage";
 import GuestOnlyRoute from "@/routes/GuestOnlyRoute";
@@ -45,6 +46,7 @@ const AppRoutes = () => (
         <Route index element={<HomePage />} />
         <Route path={ROUTES.TOURNAMENTS} element={<TournamentsPage />} />
         <Route path={ROUTES.TOURNAMENT} element={<TournamentDetailsPage />} />
+        <Route path={ROUTES.TEAM} element={<TeamPage />} />
         <Route path={ROUTES.UNAUTHORIZED} element={<UnauthorizedPage />} />
         {ComponentShowcasePage && (
           <Route path={ROUTES.DEV_COMPONENTS} element={<ComponentShowcasePage />} />
@@ -57,8 +59,9 @@ const AppRoutes = () => (
           <Route path={ROUTES.LOGIN} element={<LoginPage />} />
           <Route path={ROUTES.SIGNUP} element={<SignupPage />} />
           <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPasswordPage />} />
-          <Route path={ROUTES.INVITE} element={<AcceptInvitePage />} />
         </Route>
+        {/* Logged-in players open invite links too, so this isn't guest-only */}
+        <Route path={ROUTES.INVITE} element={<AcceptInvitePage />} />
         <Route element={<RoleRoute requireVerified={false} />}>
           <Route path={ROUTES.VERIFY_ACCOUNT} element={<VerifyAccountPage />} />
         </Route>

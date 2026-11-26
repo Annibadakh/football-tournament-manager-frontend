@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { MapPin, X } from "lucide-react";
+import DropdownPortal from "@/components/ui/DropdownPortal";
 import FieldWrapper from "@/components/ui/FieldWrapper";
 import Spinner from "@/components/ui/Spinner";
 import useDebounce from "@/hooks/useDebounce";
@@ -28,6 +29,7 @@ const PlaceSearch = ({
 }) => {
   const id = `${useId()}-${name}`;
   const containerRef = useRef(null);
+  const panelRef = useRef(null);
   // One token per search session: Google bills autocomplete + details together
   const sessionTokenRef = useRef(newSessionToken());
   const [query, setQuery] = useState("");
@@ -56,7 +58,9 @@ const PlaceSearch = ({
   useEffect(() => {
     if (!isEditing || !value) return undefined;
     const handlePointerDown = (event) => {
-      if (!containerRef.current?.contains(event.target)) setIsEditing(false);
+      const isInside =
+        containerRef.current?.contains(event.target) || panelRef.current?.contains(event.target);
+      if (!isInside) setIsEditing(false);
     };
     document.addEventListener("mousedown", handlePointerDown);
     return () => document.removeEventListener("mousedown", handlePointerDown);
@@ -159,34 +163,36 @@ const PlaceSearch = ({
       </FieldWrapper>
 
       {isOpen && !isSearching && (
-        <ul
-          role="listbox"
-          aria-label={label}
-          className="absolute z-30 mt-1 max-h-72 w-full overflow-y-auto rounded-lg border border-line bg-surface py-1 shadow-lg"
-        >
-          {suggestions.items.length === 0 && (
-            <li className="px-3 py-2 text-sm text-fg-muted">No places found</li>
-          )}
-          {suggestions.items.map((suggestion, index) => (
-            <li
-              key={suggestion.googlePlaceId}
-              role="option"
-              aria-selected={index === activeIndex}
-              onMouseEnter={() => setActiveIndex(index)}
-              onMouseDown={(event) => event.preventDefault()}
-              onClick={() => selectSuggestion(suggestion)}
-              className={cn(
-                "cursor-pointer px-3 py-2",
-                index === activeIndex && "bg-surface-muted",
-              )}
-            >
-              <p className="text-sm font-semibold text-fg">{suggestion.primaryText}</p>
-              {suggestion.secondaryText && (
-                <p className="text-xs text-fg-muted">{suggestion.secondaryText}</p>
-              )}
-            </li>
-          ))}
-        </ul>
+        <DropdownPortal anchorRef={containerRef} panelRef={panelRef}>
+          <ul
+            role="listbox"
+            aria-label={label}
+            className="max-h-72 overflow-y-auto rounded-lg border border-line bg-surface py-1 shadow-lg"
+          >
+            {suggestions.items.length === 0 && (
+              <li className="px-3 py-2 text-sm text-fg-muted">No places found</li>
+            )}
+            {suggestions.items.map((suggestion, index) => (
+              <li
+                key={suggestion.googlePlaceId}
+                role="option"
+                aria-selected={index === activeIndex}
+                onMouseEnter={() => setActiveIndex(index)}
+                onMouseDown={(event) => event.preventDefault()}
+                onClick={() => selectSuggestion(suggestion)}
+                className={cn(
+                  "cursor-pointer px-3 py-2",
+                  index === activeIndex && "bg-surface-muted",
+                )}
+              >
+                <p className="text-sm font-semibold text-fg">{suggestion.primaryText}</p>
+                {suggestion.secondaryText && (
+                  <p className="text-xs text-fg-muted">{suggestion.secondaryText}</p>
+                )}
+              </li>
+            ))}
+          </ul>
+        </DropdownPortal>
       )}
     </div>
   );

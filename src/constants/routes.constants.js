@@ -2,6 +2,7 @@ export const ROUTES = Object.freeze({
   HOME: "/",
   TOURNAMENTS: "/tournaments",
   TOURNAMENT: "/tournaments/:tournamentId",
+  TEAM: "/teams/:teamId",
   LOGIN: "/login",
   SIGNUP: "/signup",
   VERIFY_ACCOUNT: "/verify",

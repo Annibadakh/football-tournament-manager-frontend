@@ -1,5 +1,6 @@
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { Check, ChevronDown, X } from "lucide-react";
+import DropdownPortal from "@/components/ui/DropdownPortal";
 import FieldWrapper from "@/components/ui/FieldWrapper";
 import Spinner from "@/components/ui/Spinner";
 import { cn } from "@/utils/cn";
@@ -26,6 +27,7 @@ const Select = ({
   const containerRef = useRef(null);
   const triggerRef = useRef(null);
   const searchRef = useRef(null);
+  const panelRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
@@ -60,7 +62,9 @@ const Select = ({
   useEffect(() => {
     if (!isOpen) return undefined;
     const handlePointerDown = (event) => {
-      if (!containerRef.current?.contains(event.target)) closeList({ restoreFocus: false });
+      const isInside =
+        containerRef.current?.contains(event.target) || panelRef.current?.contains(event.target);
+      if (!isInside) closeList({ restoreFocus: false });
     };
     document.addEventListener("mousedown", handlePointerDown);
     return () => document.removeEventListener("mousedown", handlePointerDown);
@@ -142,58 +146,61 @@ const Select = ({
       </FieldWrapper>
 
       {isOpen && (
-        <div className="absolute z-30 mt-1 w-full overflow-hidden rounded-lg border border-line bg-surface shadow-lg">
-          {searchable && (
-            <input
-              ref={searchRef}
-              value={query}
-              onChange={(event) => {
-                setQuery(event.target.value);
-                setActiveIndex(0);
-              }}
-              placeholder="Type to filter..."
-              aria-label="Filter options"
-              className="w-full border-b border-line bg-transparent px-3 py-2 text-sm text-fg outline-none"
-            />
-          )}
-          <ul
-            id={listboxId}
-            role="listbox"
-            aria-label={label}
-            className="max-h-60 overflow-y-auto py-1"
-          >
-            {loading && (
-              <li className="flex items-center gap-2 px-3 py-2 text-sm text-fg-muted">
-                <Spinner size="sm" /> Loading...
-              </li>
+        <DropdownPortal anchorRef={containerRef} panelRef={panelRef}>
+          {/* Key events from the portal bubble through React to the container's handler */}
+          <div className="overflow-hidden rounded-lg border border-line bg-surface shadow-lg">
+            {searchable && (
+              <input
+                ref={searchRef}
+                value={query}
+                onChange={(event) => {
+                  setQuery(event.target.value);
+                  setActiveIndex(0);
+                }}
+                placeholder="Type to filter..."
+                aria-label="Filter options"
+                className="w-full border-b border-line bg-transparent px-3 py-2 text-sm text-fg outline-none"
+              />
             )}
-            {!loading && visibleOptions.length === 0 && (
-              <li className="px-3 py-2 text-sm text-fg-muted">{emptyMessage}</li>
-            )}
-            {!loading &&
-              visibleOptions.map((option, index) => {
-                const isSelected = option.value === value;
-                return (
-                  <li
-                    key={option.value}
-                    role="option"
-                    aria-selected={isSelected}
-                    onMouseEnter={() => setActiveIndex(index)}
-                    onMouseDown={(event) => event.preventDefault()}
-                    onClick={() => selectOption(option)}
-                    className={cn(
-                      "flex cursor-pointer items-center justify-between px-3 py-2 text-sm text-fg",
-                      index === activeIndex && "bg-surface-muted",
-                      isSelected && "font-semibold text-brand-700 dark:text-brand-300",
-                    )}
-                  >
-                    {option.label}
-                    {isSelected && <Check className="size-4" aria-hidden="true" />}
-                  </li>
-                );
-              })}
-          </ul>
-        </div>
+            <ul
+              id={listboxId}
+              role="listbox"
+              aria-label={label}
+              className="max-h-60 overflow-y-auto py-1"
+            >
+              {loading && (
+                <li className="flex items-center gap-2 px-3 py-2 text-sm text-fg-muted">
+                  <Spinner size="sm" /> Loading...
+                </li>
+              )}
+              {!loading && visibleOptions.length === 0 && (
+                <li className="px-3 py-2 text-sm text-fg-muted">{emptyMessage}</li>
+              )}
+              {!loading &&
+                visibleOptions.map((option, index) => {
+                  const isSelected = option.value === value;
+                  return (
+                    <li
+                      key={option.value}
+                      role="option"
+                      aria-selected={isSelected}
+                      onMouseEnter={() => setActiveIndex(index)}
+                      onMouseDown={(event) => event.preventDefault()}
+                      onClick={() => selectOption(option)}
+                      className={cn(
+                        "flex cursor-pointer items-center justify-between px-3 py-2 text-sm text-fg",
+                        index === activeIndex && "bg-surface-muted",
+                        isSelected && "font-semibold text-brand-700 dark:text-brand-300",
+                      )}
+                    >
+                      {option.label}
+                      {isSelected && <Check className="size-4" aria-hidden="true" />}
+                    </li>
+                  );
+                })}
+            </ul>
+          </div>
+        </DropdownPortal>
       )}
     </div>
   );

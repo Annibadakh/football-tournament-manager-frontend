@@ -20,3 +20,6 @@ export const getAge = (dateOfBirth, today = new Date()) => {
   const date = toDate(dateOfBirth);
   return isValid(date) ? differenceInYears(today, date) : null;
 };
+
+// Today's calendar date as YYYY-MM-DD, comparable with API date-only fields
+export const todayIsoDate = (today = new Date()) => format(today, "yyyy-MM-dd");
