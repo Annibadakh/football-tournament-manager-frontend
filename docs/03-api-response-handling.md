@@ -39,3 +39,10 @@ const res = await createTeam(values);
 if (!res.ok) { setErrors(toFieldErrors(res.errors)); return; }
 navigate("/dashboard/teams");
 ```
+
+## Session and token refresh (Phase 1)
+- The access token lives in Redux memory only. The refresh token is an httpOnly cookie the browser sends to `/api/v1/auth/*`.
+- On app load, `SessionBootstrap` calls `POST /auth/refresh` once to restore the session.
+- On any 401, `apiClient` calls `refreshSession()` once (shared by parallel requests) and replays the original request. If the refresh fails, the session is cleared and guards redirect to `/login`.
+- Auth calls pass `skipAuthRefresh: true` so they never loop.
+- Uploads: `uploadFile(file, purpose)` gets a presigned POST from `/uploads`, then posts the file directly to S3 with plain axios (no auth header or cookies), and returns the object key.
