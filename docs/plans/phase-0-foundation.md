@@ -1,6 +1,6 @@
 # Phase 0: Foundation (module plan)
 
-Status: **In progress** (decisions confirmed 2026-11-26). Part of `plans/implementation-plan.md`. Delete or archive this file when Phase 0 is done.
+Status: **Done** (2026-11-26). Kept until Phase 1 review, then archived. Part of `plans/implementation-plan.md`. Delete or archive this file when Phase 0 is done.
 Goal: the skeleton every later phase builds on. **No business features in this phase.**
 
 ## Backend tasks
@@ -48,3 +48,8 @@ Goal: the skeleton every later phase builds on. **No business features in this p
 | Frontend language | **JavaScript** (`.js`/`.jsx`) |
 | Frontend `.env` | Removed from git and replaced by `.env.example`. Hosting sets `VITE_API_URL` |
 | Home page until Phase 2 | Branded placeholder. Light / Dark / System toggle in the header (public + dashboard) |
+
+## Outcome
+- **Backend**: all tasks done. 9 tests pass. Verified on MySQL 8.0 (server start, `/api/v1/health`, migrate/undo/seed, utf8mb4 Marathi text).
+- **Frontend**: all tasks done. 14 tests pass, lint clean, production build excludes dev pages. Verified in Chromium: light/dark/system theme (persisted per device), phone layout with no horizontal scroll, the zod form, the server-side DataTable, Modal/ConfirmDialog, and a real `GET /api/v1/health` through `request()` with a toast.
+- **Deviations**: `request()` takes an axios config (`request({ method, url }, options)`) instead of a promise, so it can pick toast defaults from the method. Dev routes read `import.meta.env.DEV` directly so Vite can strip them from production.

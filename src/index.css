@@ -1,52 +1,114 @@
-@import 'tailwindcss';
+@import "tailwindcss";
+
+/* Dark mode is class-based so the Light / Dark / System toggle controls it */
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  /* Maidaan v2 palette (docs/07-brand.md); v1 tokens below stay until v1 screens are replaced */
-  --color-brand-50: #E8F5EE; --color-brand-100: #C7E7D4; --color-brand-200: #9DD4B4; --color-brand-300: #6BBE8F;
-  --color-brand-400: #3DA56C; --color-brand-500: #1A8F50; --color-brand-600: #0F7B3F; --color-brand-700: #0C6533;
-  --color-brand-800: #0A5029; --color-brand-900: #083E21; --color-brand-950: #052615;
+  /* Maidaan palette, see docs/07-brand.md */
+  --color-brand-50: #e8f5ee;
+  --color-brand-100: #c7e7d4;
+  --color-brand-200: #9dd4b4;
+  --color-brand-300: #6bbe8f;
+  --color-brand-400: #3da56c;
+  --color-brand-500: #1a8f50;
+  --color-brand-600: #0f7b3f;
+  --color-brand-700: #0c6533;
+  --color-brand-800: #0a5029;
+  --color-brand-900: #083e21;
+  --color-brand-950: #052615;
 
-  --color-accent-50: #FEF3E8; --color-accent-100: #FDE2C6; --color-accent-200: #FAC795; --color-accent-300: #F7A95E;
-  --color-accent-400: #F49A3F; --color-accent-500: #F28C28; --color-accent-600: #D9741A; --color-accent-700: #B45C13;
-  --color-accent-800: #8C4711; --color-accent-900: #6B3710; --color-accent-950: #3D1E08;
+  --color-accent-50: #fef3e8;
+  --color-accent-100: #fde2c6;
+  --color-accent-200: #fac795;
+  --color-accent-300: #f7a95e;
+  --color-accent-400: #f49a3f;
+  --color-accent-500: #f28c28;
+  --color-accent-600: #d9741a;
+  --color-accent-700: #b45c13;
+  --color-accent-800: #8c4711;
+  --color-accent-900: #6b3710;
+  --color-accent-950: #3d1e08;
 
-  --color-ink-50: #F5F7F6; --color-ink-100: #E9EDEB; --color-ink-200: #D3DAD6; --color-ink-300: #B3BDB8;
-  --color-ink-400: #8A968F; --color-ink-500: #66736C; --color-ink-600: #4C5852; --color-ink-700: #38433D;
-  --color-ink-800: #24302A; --color-ink-900: #16231C; --color-ink-950: #0B1F17;
+  --color-ink-50: #f5f7f6;
+  --color-ink-100: #e9edeb;
+  --color-ink-200: #d3dad6;
+  --color-ink-300: #b3bdb8;
+  --color-ink-400: #8a968f;
+  --color-ink-500: #66736c;
+  --color-ink-600: #4c5852;
+  --color-ink-700: #38433d;
+  --color-ink-800: #24302a;
+  --color-ink-900: #16231c;
+  --color-ink-950: #0b1f17;
 
-  --color-success: #0F7B3F; --color-warning: #B45309; --color-danger: #DC2626; --color-info: #2563EB; --color-live: #D42A3A;
+  --color-success: #0f7b3f;
+  --color-warning: #b45309;
+  --color-danger: #dc2626;
+  --color-info: #2563eb;
+  --color-live: #d42a3a;
 
-  --font-brand: "Baloo 2", sans-serif;
-
-  --color-primary: var(--primary-color);
-  --color-secondary: var(--secondary);
-  --color-tertiary: var(--tertiary);
-  --color-customblack: var(--black);
-  --color-customwhite: var(--white);
-  --color-fourthcolor: var(--fourthcolor);
-  --color-customgray: var(--gray);
-
-  --shadow-custom: var(--box-shadow);
-
-  --font-custom: "Times New Roman", serif;
-  --font-anton: Anton, sans-serif;
-  --font-spartan: "League Spartan", sans-serif;
+  --font-brand: "Baloo 2", "Noto Sans", sans-serif;
+  --font-sans: "Noto Sans", system-ui, sans-serif;
 }
 
-/*
-  The default border color has changed to `currentcolor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
+/* Semantic surface/text tokens switch with the theme, so components rarely need dark: variants */
+@theme inline {
+  --color-page: var(--page);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-line: var(--line);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-link: var(--link);
+}
 
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
+:root {
+  --page: var(--color-ink-50);
+  --surface: #ffffff;
+  --surface-muted: var(--color-ink-100);
+  --line: var(--color-ink-200);
+  --fg: var(--color-ink-950);
+  --fg-muted: var(--color-ink-500);
+  --link: var(--color-brand-600);
+  color-scheme: light;
+}
+
+.dark {
+  --page: var(--color-ink-950);
+  --surface: var(--color-ink-900);
+  --surface-muted: var(--color-ink-800);
+  --line: var(--color-ink-800);
+  --fg: var(--color-ink-100);
+  --fg-muted: var(--color-ink-300);
+  --link: var(--color-brand-400);
+  color-scheme: dark;
+}
+
 @layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply bg-page font-sans text-fg antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-brand font-bold;
+  }
+
   *,
   ::after,
   ::before,
   ::backdrop,
   ::file-selector-button {
-    border-color: var(--color-gray-200, currentcolor);
+    border-color: var(--line);
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-brand-500 dark:outline-brand-400;
   }
 }

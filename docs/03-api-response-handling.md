@@ -27,7 +27,7 @@ Responses return rows in `data` and pagination in `meta`. This maps directly ont
 
 ## Frontend layers (planned)
 1. **`apiClient`**: a single axios instance. It reads `baseURL` from `VITE_API_URL`, attaches the Bearer token safely (no crash when logged out), and on `401` clears the session and redirects to `/login`.
-2. **`request(promise, options)`**: the central wrapper used by every call.
+2. **`request(config, options)`**: the central wrapper used by every call. `config` is an axios request config (`{ method, url, params, data, signal }`), which lets it pick toast defaults from the method.
    - It returns `{ ok, data, meta, message, errors }` and never throws to the component.
    - Options: `successToast` (default: off for GET and on for mutations, using the backend `message`), `errorToast` (default on), and `loadingToast` (uses `toast.promise`).
    - It normalizes network errors, timeouts and non-standard bodies into the same shape.

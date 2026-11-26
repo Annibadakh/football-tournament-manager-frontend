@@ -1,6 +1,8 @@
-# Generic Components (Planning)
+# Generic Components
 
-Shared, reusable UI building blocks live in `src/components/ui/` (the final folder structure is still to be decided).
+Shared, reusable UI building blocks live in `src/components/ui/` (layout pieces in `src/components/layout/`).
+**Status:** all P1 components are built (Phase 0). Try them at `/dev/components` (dev builds only), and the dashboard shell at `/dev/dashboard`.
+Form controls share `FieldWrapper` (label + bordered box + error/helper text). The table pairs `DataTable` with the `useServerTable()` hook.
 Every screen composes these instead of re-styling raw HTML elements.
 
 **Rules for all components**

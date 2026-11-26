@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Environment files (commit .env.example only)
+.env
+.env.*
+!.env.example
+
+coverage
