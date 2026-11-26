@@ -22,7 +22,8 @@ This document lists what **earlier phases must store now** so that the last phas
 ## Google Places: how it is used
 - **Frontend**: Places Autocomplete (Maps JavaScript API) with a **browser key restricted by HTTP referrer**, using session tokens to reduce cost. The user picks a suggestion and the frontend sends only the **`place_id`** to our API.
 - **Backend**: calls **Place Details** with a **server key** (restricted by server IP), never trusting coordinates sent by the browser. It upserts the `places` row by `google_place_id` and stores `details_fetched_at`.
-- **Caching rule** (Google Maps Platform terms, verify the current version before launch): place IDs may be stored indefinitely, but other Places content (coordinates, address parts) may only be cached for a limited period, about 30 days. Plan: a scheduled job **re-fetches details for places older than ~25 days** that are still referenced by active records. Volume is small (venues, cities), so the cost is low.
+- **Storage now**: the required place details (place ID, name, address parts, city, district, state, pincode, lat/lng) are stored in `places` with **`details_fetched_at`**. **No refresh job is built now.**
+- **Later (with schedulers/cron)**: Google's terms (verify the current version before launch) allow storing place IDs indefinitely but limit caching other Places content to about 30 days. When schedulers are added, a job will re-fetch stale details using `details_fetched_at`. Nothing else needs to change.
 - **Owner setup**: a Google Cloud project with billing, the **Maps JavaScript API**, **Places API** and **Geocoding API** enabled, plus the two restricted keys above.
 
 ## CMS sketch (last phase, for reference only)
