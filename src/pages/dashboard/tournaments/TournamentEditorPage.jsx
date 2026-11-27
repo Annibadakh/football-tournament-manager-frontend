@@ -19,6 +19,7 @@ import {
 import { changeTournamentStatus, getTournament } from "@/services/tournament.service";
 import { selectCurrentUser } from "@/store/slices/authSlice";
 import { apiErrorsToFieldErrors } from "@/utils/form";
+import FixturesManager from "@/pages/dashboard/tournaments/fixtures/FixturesManager";
 import GroundsEditor from "@/pages/dashboard/tournaments/GroundsEditor";
 import RuleBookEditor from "@/pages/dashboard/tournaments/RuleBookEditor";
 import StaffManager from "@/pages/dashboard/tournaments/StaffManager";
@@ -28,6 +29,7 @@ import TournamentDetailsForm from "@/pages/dashboard/tournaments/TournamentDetai
 const TABS = [
   { value: "details", label: "Details" },
   { value: "teams", label: "Teams" },
+  { value: "fixtures", label: "Fixtures" },
   { value: "staff", label: "Staff" },
   { value: "grounds", label: "Grounds" },
   { value: "rules", label: "Rule book" },
@@ -140,6 +142,9 @@ const TournamentEditorPage = () => {
         />
       )}
       {tab === "teams" && <TeamsManager tournament={tournament} />}
+      {tab === "fixtures" && (
+        <FixturesManager tournament={tournament} onTournamentSaved={handleSaved} />
+      )}
       {tab === "staff" && <StaffManager tournament={tournament} />}
       {tab === "grounds" && <GroundsEditor tournamentId={tournament.slug} />}
       {tab === "rules" && <RuleBookEditor tournamentId={tournament.slug} />}

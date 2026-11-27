@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import FixturesSection from "@/pages/public/tournament-details/FixturesSection";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import {
@@ -218,7 +219,8 @@ const TournamentDetailsPage = () => {
         </div>
 
         <div className="mt-8 grid gap-6 lg:grid-cols-3">
-          <div className="flex flex-col gap-6 lg:col-span-2">
+          <div className="flex min-w-0 flex-col gap-6 lg:col-span-2">
+            <FixturesSection tournamentId={tournament.slug} />
             <Card title="Overview">
               <div className="grid gap-4 sm:grid-cols-2">
                 <Fact

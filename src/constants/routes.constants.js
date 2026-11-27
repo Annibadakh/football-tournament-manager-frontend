@@ -3,6 +3,7 @@ export const ROUTES = Object.freeze({
   TOURNAMENTS: "/tournaments",
   TOURNAMENT: "/tournaments/:tournamentId",
   TEAM: "/teams/:teamId",
+  MATCH: "/matches/:matchId",
   LOGIN: "/login",
   SIGNUP: "/signup",
   VERIFY_ACCOUNT: "/verify",

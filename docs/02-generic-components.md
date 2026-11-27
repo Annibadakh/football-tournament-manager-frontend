@@ -77,4 +77,7 @@ Every screen composes these instead of re-styling raw HTML elements.
 ## Payment components (`components/payment`)
 `PaymentCard` (fee breakdown, Pay via Razorpay Checkout, failure notice, receipts), `PaymentStatusBadge`, `ReceiptActions` (View opens the PDF in a new tab; Download saves `<receipt no>.pdf`; both fetch with the auth header) and `OfflinePaymentModal`. Checkout is loaded on demand by `utils/razorpay`.
 
+## Match components (`components/match`)
+`MatchRow` (teams or placeholders, score or "v", IST kick-off, ground, group; optional actions slot), `MatchList` (grouped by round or IST date), `BracketView` (rounds as columns, horizontal scroll, third place), `MatchStatusBadge`, `TeamMatchesCard`. Times are shown and entered in IST through `utils/match` (`formatKickoff`, `toIstInputValue`, `fromIstInputValue`). `Select` takes `ariaLabel` when it has no visible label.
+
 More components will be added as features need them. Update this file when one is added or its API changes.

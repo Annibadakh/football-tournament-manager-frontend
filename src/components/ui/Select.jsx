@@ -20,6 +20,8 @@ const Select = ({
   required = false,
   disabled = false,
   emptyMessage = "No options found",
+  // Accessible name when there is no visible label
+  ariaLabel,
   className = "",
 }) => {
   const id = `${useId()}-${name}`;
@@ -116,6 +118,7 @@ const Select = ({
             aria-haspopup="listbox"
             aria-expanded={isOpen}
             aria-controls={listboxId}
+            aria-label={label ? undefined : ariaLabel}
             aria-invalid={Boolean(error)}
             disabled={disabled}
             onClick={() => (isOpen ? closeList() : openList())}
@@ -165,7 +168,7 @@ const Select = ({
             <ul
               id={listboxId}
               role="listbox"
-              aria-label={label}
+              aria-label={label ?? ariaLabel}
               className="max-h-60 overflow-y-auto py-1"
             >
               {loading && (

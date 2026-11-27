@@ -34,6 +34,9 @@ export const ERROR_CODES = Object.freeze({
   TIMEOUT: "TIMEOUT",
 });
 
+// Match times are planned and shown in Indian time, wherever the viewer is
+export const APP_TIMEZONE = "Asia/Kolkata";
+
 export const DATE_FORMATS = Object.freeze({
   DATE: "dd MMM yyyy",
   TIME: "hh:mm a",

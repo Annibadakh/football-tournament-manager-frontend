@@ -1,6 +1,6 @@
 # Phase 5: Fixtures & live scoring (module plan)
 
-Status: **Planned** (decisions confirmed 2026-11-27). Part of `plans/implementation-plan.md`.
+Status: **5A done, 5B next** (decisions confirmed 2026-11-27). Part of `plans/implementation-plan.md`.
 Goal: the organizer builds and schedules fixtures for every tournament format; scorers run matches live from a phone; the public follows fixtures, live scores, results, standings, brackets and top scorers.
 
 Built in two parts, each with its own backend → frontend → tests → commit cycle:
@@ -99,3 +99,16 @@ Standings, top scorers and assists are **calculated from matches and events** (c
 - Socket.IO push (Phase 8).
 - Push notifications for match start and results (Phase 8).
 - Penalty goal / missed penalty events (not chosen now).
+
+## Outcome: 5A Fixtures (done)
+- **Backend**:
+  - Migration `create-fixtures`: tournament match settings, `tournament_groups`, `group_teams`, `matches`.
+  - Pure generators in `utils/fixtures.js`: circle-method round robin, balanced group draw, bracket with byes (standard seeding), crossover seeds, auto-scheduler, clash checks.
+  - `fixture.service`: groups, draw, generation for all 4 formats (with an optional third-place match and placeholders such as "Group A winner" or "Winner of M13"), auto-scheduling, add/edit/delete a match with blocking clashes and same-day warnings, public matches/match/bracket.
+  - Tests: 21 new unit tests (61 in total); the 54-check 5A e2e run and the Phase 1–4 runs pass.
+- **Frontend**:
+  - Tournament editor **Fixtures** tab: match settings, groups (draw, move, save), generate/regenerate with confirmation, schedule modal, add/edit match modal (IST kick-off, clash errors, warnings), delete.
+  - Public: a **Matches** card on the tournament page (by round/date, groups, bracket), the **match page** `/matches/:matchId`, and the team page lists its matches.
+  - Shared: `components/match/*`, `utils/match` (IST helpers), and an `ariaLabel` prop on `Select`.
+  - Tests: 48 tests. Verified in Chromium: draw → move team → generate with third place → schedule 16 matches → blocked clash → edit → public views, on phone and in dark mode.
+- **Bugs fixed during testing**: the groups editor remounted before fresh data arrived (it now keys on the loaded data); the bracket widened the public page on phones (the column now has `min-w-0`).

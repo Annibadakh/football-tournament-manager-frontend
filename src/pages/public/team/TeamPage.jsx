@@ -12,6 +12,7 @@ import {
   Users,
   X,
 } from "lucide-react";
+import TeamMatchesCard from "@/components/match/TeamMatchesCard";
 import OfflinePaymentModal from "@/components/payment/OfflinePaymentModal";
 import PaymentCard from "@/components/payment/PaymentCard";
 import EditPlayerModal from "@/components/team/EditPlayerModal";
@@ -307,6 +308,10 @@ const TeamPage = () => {
         )}
         <SquadList members={team.members} renderActions={renderMemberActions} />
       </Card>
+
+      {team.status === TEAM_STATUS.CONFIRMED && (
+        <TeamMatchesCard tournamentId={team.tournament.slug} teamId={team.id} />
+      )}
 
       {modal?.type === "invite" && (
         <InvitePlayerModal

@@ -23,6 +23,7 @@ import NotFoundPage from "@/pages/errors/NotFoundPage";
 import UnauthorizedPage from "@/pages/errors/UnauthorizedPage";
 import HomePage from "@/pages/public/home/HomePage";
 import TeamPage from "@/pages/public/team/TeamPage";
+import MatchPage from "@/pages/public/match/MatchPage";
 import TournamentDetailsPage from "@/pages/public/tournament-details/TournamentDetailsPage";
 import TournamentsPage from "@/pages/public/tournaments/TournamentsPage";
 import GuestOnlyRoute from "@/routes/GuestOnlyRoute";
@@ -47,6 +48,7 @@ const AppRoutes = () => (
         <Route path={ROUTES.TOURNAMENTS} element={<TournamentsPage />} />
         <Route path={ROUTES.TOURNAMENT} element={<TournamentDetailsPage />} />
         <Route path={ROUTES.TEAM} element={<TeamPage />} />
+        <Route path={ROUTES.MATCH} element={<MatchPage />} />
         <Route path={ROUTES.UNAUTHORIZED} element={<UnauthorizedPage />} />
         {ComponentShowcasePage && (
           <Route path={ROUTES.DEV_COMPONENTS} element={<ComponentShowcasePage />} />
