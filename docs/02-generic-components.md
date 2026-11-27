@@ -83,4 +83,7 @@ Every screen composes these instead of re-styling raw HTML elements.
 ## Live components
 `LiveScoreboard` (teams, score, running clock via `useMatchClock`, status, "on penalties"), `EventTimeline` (home left / away right, period dividers, assists, second-yellow reds), `StandingsTable` (P W D L GF GA GD Pts + form, qualifiers highlighted), `LeadersList`. Hooks: `useMatchClock` (ticks every second, corrects device time with `serverTime`/`receivedAt`) and `useLiveMatch` (polls `/live?since=version` every 10 s while live; replace with Socket.IO later).
 
+## Stream components (`components/stream`)
+`StreamPlayer` (privacy-enhanced YouTube embed with a Watch on YouTube link; thumbnail + button when the channel blocks embedding) and `StreamThumb` (selectable tile with status, time or match).
+
 More components will be added as features need them. Update this file when one is added or its API changes.

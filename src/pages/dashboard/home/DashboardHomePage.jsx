@@ -10,6 +10,7 @@ import { selectCurrentUser } from "@/store/slices/authSlice";
 import InvitationsCard from "@/pages/dashboard/home/InvitationsCard";
 import MyTeamsCard from "@/pages/dashboard/home/MyTeamsCard";
 import ScoringMatchesCard from "@/pages/dashboard/home/ScoringMatchesCard";
+import StreamingTournamentsCard from "@/pages/dashboard/home/StreamingTournamentsCard";
 
 const getProfileChecklist = (user) => [
   { label: "Add a profile photo", isDone: Boolean(user.photoUrl) },
@@ -27,6 +28,7 @@ const MemberHome = ({ user }) => {
   return (
     <div className="grid gap-6 lg:grid-cols-2">
       <ScoringMatchesCard />
+      <StreamingTournamentsCard />
       <InvitationsCard onResponded={() => setTeamsReloadKey((key) => key + 1)} />
       <Card
         title="Complete your profile"

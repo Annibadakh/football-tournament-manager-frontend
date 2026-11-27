@@ -23,6 +23,7 @@ import FixturesManager from "@/pages/dashboard/tournaments/fixtures/FixturesMana
 import GroundsEditor from "@/pages/dashboard/tournaments/GroundsEditor";
 import RuleBookEditor from "@/pages/dashboard/tournaments/RuleBookEditor";
 import StaffManager from "@/pages/dashboard/tournaments/StaffManager";
+import StreamsManager from "@/pages/dashboard/streams/StreamsManager";
 import TeamsManager from "@/pages/dashboard/tournaments/TeamsManager";
 import TournamentDetailsForm from "@/pages/dashboard/tournaments/TournamentDetailsForm";
 
@@ -130,7 +131,16 @@ const TournamentEditorPage = () => {
           </Button>
         ))}
       />
-      <Tabs items={TABS} value={tab} onChange={setTab} className="mb-6" />
+      <Tabs
+        items={
+          tournament.isStreamingEnabled
+            ? [...TABS.slice(0, 3), { value: "streams", label: "Streams" }, ...TABS.slice(3)]
+            : TABS
+        }
+        value={tab}
+        onChange={setTab}
+        className="mb-6"
+      />
       {tab === "details" && (
         <TournamentDetailsForm
           key={formVersion}
@@ -146,6 +156,7 @@ const TournamentEditorPage = () => {
         <FixturesManager tournament={tournament} onTournamentSaved={handleSaved} />
       )}
       {tab === "staff" && <StaffManager tournament={tournament} />}
+      {tab === "streams" && <StreamsManager tournament={tournament} />}
       {tab === "grounds" && <GroundsEditor tournamentId={tournament.slug} />}
       {tab === "rules" && <RuleBookEditor tournamentId={tournament.slug} />}
       <ConfirmDialog

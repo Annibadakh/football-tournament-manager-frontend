@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { CalendarClock, MapPin, Medal, Radio, Swords, Timer } from "lucide-react";
 import EventTimeline from "@/components/match/EventTimeline";
 import LiveScoreboard from "@/components/match/LiveScoreboard";
+import StreamPlayer from "@/components/stream/StreamPlayer";
 import Card from "@/components/ui/Card";
 import EmptyState from "@/components/ui/EmptyState";
 import PageLoader from "@/components/ui/PageLoader";
@@ -43,6 +44,7 @@ const MatchView = ({ initial }) => {
           </Link>
         )}
       </div>
+      {match.stream && <StreamPlayer stream={match.stream} />}
       <Card>
         <div className="flex flex-col items-center gap-4 py-2">
           <p className="text-xs font-semibold tracking-wide text-fg-muted uppercase">{stageLine}</p>
