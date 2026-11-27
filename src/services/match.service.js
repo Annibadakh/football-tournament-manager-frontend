@@ -37,3 +37,50 @@ export const updateMatch = (matchId, data) =>
   request({ method: "patch", url: `/matches/${matchId}`, data });
 
 export const deleteMatch = (matchId) => request({ method: "delete", url: `/matches/${matchId}` });
+
+// ---------- live ----------
+
+export const getLive = (matchId, since, options) =>
+  request(
+    { method: "get", url: `/matches/${matchId}/live`, params: since ? { since } : {} },
+    options,
+  );
+
+export const getConsole = (matchId, options) =>
+  request({ method: "get", url: `/matches/${matchId}/console` }, options);
+
+export const changePeriod = (matchId, period) =>
+  request(
+    { method: "post", url: `/matches/${matchId}/periods`, data: { period } },
+    { successToast: false },
+  );
+
+export const addEvent = (matchId, data) =>
+  request({ method: "post", url: `/matches/${matchId}/events`, data }, { successToast: false });
+
+export const undoLastEvent = (matchId) =>
+  request({ method: "delete", url: `/matches/${matchId}/events/last` });
+
+export const declareResult = (matchId, data) =>
+  request({ method: "post", url: `/matches/${matchId}/result`, data });
+
+export const awardMatch = (matchId, data) =>
+  request({ method: "post", url: `/matches/${matchId}/walkover`, data });
+
+export const cancelMatch = (matchId) =>
+  request({ method: "post", url: `/matches/${matchId}/cancellation` });
+
+export const getStandings = (tournamentId, options) =>
+  request({ method: "get", url: tournamentUrl(tournamentId, "standings") }, options);
+
+export const getLeaders = (tournamentId, options) =>
+  request({ method: "get", url: tournamentUrl(tournamentId, "leaders") }, options);
+
+export const listCardNotices = (tournamentId, options) =>
+  request({ method: "get", url: tournamentUrl(tournamentId, "card-notices") }, options);
+
+export const handleCardNotice = (noticeId) =>
+  request({ method: "patch", url: `/card-notices/${noticeId}` });
+
+export const listMyScoringMatches = (options) =>
+  request({ method: "get", url: "/me/scoring" }, options);

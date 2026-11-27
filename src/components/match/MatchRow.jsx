@@ -2,7 +2,9 @@ import { Link } from "react-router-dom";
 import { MapPin } from "lucide-react";
 import MatchStatusBadge from "@/components/match/MatchStatusBadge";
 import { buildPath, ROUTES } from "@/constants/routes.constants";
-import { FINISHED_MATCH_STATUSES, MATCH_STATUS } from "@/constants/match.constants";
+import { DECIDED_BY, FINISHED_MATCH_STATUSES, MATCH_STATUS } from "@/constants/match.constants";
+
+const DECIDED_SHORT = { [DECIDED_BY.PENALTIES]: "pens", [DECIDED_BY.EXTRA_TIME]: "aet" };
 import { cn } from "@/utils/cn";
 import { formatKickoff, sideLabel } from "@/utils/match";
 
@@ -45,6 +47,11 @@ const MatchRow = ({ match, actions = null, showGroup = true }) => (
       >
         {hasScore(match) ? `${match.homeScore ?? 0} – ${match.awayScore ?? 0}` : "v"}
       </span>
+      {DECIDED_SHORT[match.decidedBy] && match.status === MATCH_STATUS.COMPLETED && (
+        <span className="shrink-0 text-[10px] font-semibold text-fg-muted uppercase">
+          {DECIDED_SHORT[match.decidedBy]}
+        </span>
+      )}
       <Side match={match} side="away" />
     </Link>
     <div className="flex flex-wrap items-center gap-x-3 gap-y-1 pl-11 text-xs text-fg-muted sm:w-64 sm:shrink-0 sm:pl-0">

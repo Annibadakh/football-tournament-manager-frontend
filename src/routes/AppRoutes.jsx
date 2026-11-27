@@ -24,6 +24,7 @@ import UnauthorizedPage from "@/pages/errors/UnauthorizedPage";
 import HomePage from "@/pages/public/home/HomePage";
 import TeamPage from "@/pages/public/team/TeamPage";
 import MatchPage from "@/pages/public/match/MatchPage";
+import ScorerConsolePage from "@/pages/dashboard/matches/ScorerConsolePage";
 import TournamentDetailsPage from "@/pages/public/tournament-details/TournamentDetailsPage";
 import TournamentsPage from "@/pages/public/tournaments/TournamentsPage";
 import GuestOnlyRoute from "@/routes/GuestOnlyRoute";
@@ -74,6 +75,7 @@ const AppRoutes = () => (
           <Route index element={<DashboardHomePage />} />
           <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
           <Route path={ROUTES.SECURITY} element={<SecurityPage />} />
+          <Route path={ROUTES.MATCH_CONSOLE} element={<ScorerConsolePage />} />
           <Route element={<RoleRoute allowedRoles={STAFF_ADMIN_ROLES} />}>
             <Route path={ROUTES.USERS} element={<UsersPage />} />
             <Route path={ROUTES.RULE_BOOK} element={<RuleBookPage />} />

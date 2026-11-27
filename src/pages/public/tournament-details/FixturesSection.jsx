@@ -1,16 +1,19 @@
 import { useEffect, useState } from "react";
 import BracketView from "@/components/match/BracketView";
+import LeadersList from "@/components/match/LeadersList";
 import MatchList from "@/components/match/MatchList";
+import StandingsTable from "@/components/match/StandingsTable";
 import Card from "@/components/ui/Card";
 import Tabs from "@/components/ui/Tabs";
-import { getBracket, getGroups, listMatches } from "@/services/match.service";
+import { MATCH_STATUS } from "@/constants/match.constants";
+import { getBracket, getLeaders, getStandings, listMatches } from "@/services/match.service";
 
 const VIEW_OPTIONS = [
   { value: "round", label: "By round" },
   { value: "date", label: "By date" },
 ];
 
-// Public fixtures, groups and bracket; hidden until fixtures exist
+// Public fixtures, tables, bracket and leaders; hidden until fixtures exist
 const FixturesSection = ({ tournamentId }) => {
   const [data, setData] = useState(null);
   const [tab, setTab] = useState("fixtures");
@@ -21,14 +24,16 @@ const FixturesSection = ({ tournamentId }) => {
     const quiet = { errorToast: false };
     Promise.all([
       listMatches(tournamentId, {}, quiet),
-      getGroups(tournamentId, quiet),
+      getStandings(tournamentId, quiet),
       getBracket(tournamentId, quiet),
-    ]).then(([matchesRes, groupsRes, bracketRes]) => {
+      getLeaders(tournamentId, quiet),
+    ]).then(([matchesRes, standingsRes, bracketRes, leadersRes]) => {
       if (!isCurrent) return;
       setData({
         matches: matchesRes.ok ? matchesRes.data : [],
-        groups: groupsRes.ok ? groupsRes.data.groups : [],
+        tables: standingsRes.ok ? standingsRes.data.tables : [],
         bracket: bracketRes.ok ? bracketRes.data : { rounds: [] },
+        leaders: leadersRes.ok ? leadersRes.data : { scorers: [], assists: [] },
       });
     });
     return () => {
@@ -38,41 +43,41 @@ const FixturesSection = ({ tournamentId }) => {
 
   if (!data || data.matches.length === 0) return null;
 
+  const liveCount = data.matches.filter((match) => match.status === MATCH_STATUS.LIVE).length;
+  const hasGroups = data.tables.some((table) => table.group);
   const tabs = [
     { value: "fixtures", label: "Fixtures & results" },
-    ...(data.groups.length ? [{ value: "groups", label: "Groups" }] : []),
+    ...(data.tables.length ? [{ value: "table", label: hasGroups ? "Groups" : "Table" }] : []),
     ...(data.bracket.rounds.length ? [{ value: "bracket", label: "Bracket" }] : []),
+    { value: "leaders", label: "Top scorers" },
   ];
 
   return (
-    <Card title="Matches" subtitle={`${data.matches.length} matches · times in IST`}>
-      {tabs.length > 1 && <Tabs items={tabs} value={tab} onChange={setTab} className="mb-4" />}
+    <Card
+      title="Matches"
+      subtitle={`${data.matches.length} matches · times in IST${liveCount ? ` · ${liveCount} live now` : ""}`}
+    >
+      <Tabs items={tabs} value={tab} onChange={setTab} className="mb-4" />
       {tab === "fixtures" && (
         <>
           <Tabs items={VIEW_OPTIONS} value={groupBy} onChange={setGroupBy} className="mb-3" />
           <MatchList matches={data.matches} groupBy={groupBy} />
         </>
       )}
-      {tab === "groups" && (
-        <div className="grid gap-3 sm:grid-cols-2">
-          {data.groups.map((group) => (
-            <div key={group.id} className="rounded-xl border border-line p-3">
-              <h3 className="mb-2 font-semibold text-fg">Group {group.name}</h3>
-              <ul className="flex flex-col gap-1 text-sm text-fg">
-                {group.teams.map((team) => (
-                  <li key={team.id} className="flex items-center gap-2">
-                    <span className="flex size-7 items-center justify-center rounded-md bg-brand-700 text-[10px] font-bold text-white">
-                      {team.shortName}
-                    </span>
-                    {team.name}
-                  </li>
-                ))}
-              </ul>
-            </div>
+      {tab === "table" && (
+        <div className="flex flex-col gap-5">
+          {data.tables.map((table) => (
+            <StandingsTable
+              key={table.group?.id ?? "league"}
+              title={table.group ? `Group ${table.group.name}` : null}
+              rows={table.rows}
+              qualifiers={table.qualifiers}
+            />
           ))}
         </div>
       )}
       {tab === "bracket" && <BracketView bracket={data.bracket} />}
+      {tab === "leaders" && <LeadersList leaders={data.leaders} />}
     </Card>
   );
 };

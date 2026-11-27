@@ -1,6 +1,6 @@
 # Phase 5: Fixtures & live scoring (module plan)
 
-Status: **5A done, 5B next** (decisions confirmed 2026-11-27). Part of `plans/implementation-plan.md`.
+Status: **Done** (5A + 5B) (decisions confirmed 2026-11-27). Part of `plans/implementation-plan.md`.
 Goal: the organizer builds and schedules fixtures for every tournament format; scorers run matches live from a phone; the public follows fixtures, live scores, results, standings, brackets and top scorers.
 
 Built in two parts, each with its own backend → frontend → tests → commit cycle:
@@ -112,3 +112,22 @@ Standings, top scorers and assists are **calculated from matches and events** (c
   - Shared: `components/match/*`, `utils/match` (IST helpers), and an `ariaLabel` prop on `Select`.
   - Tests: 48 tests. Verified in Chromium: draw → move team → generate with third place → schedule 16 matches → blocked clash → edit → public views, on phone and in dark mode.
 - **Bugs fixed during testing**: the groups editor remounted before fresh data arrived (it now keys on the loaded data); the bracket widened the public page on phones (the column now has `min-w-0`).
+
+## Outcome: 5B Live & results (done)
+- **Backend**:
+  - Migration `create-match-events`: `match_events`, `match_logs`, `card_notices`.
+  - `utils/matchLogic.js` (pure): clock minute, score from events, result rules, standings with tie-breakers (points → GD → GF → head-to-head → name; walkover/forfeit 3–0).
+  - `live.service`:
+    - Scoring rights: the organizer, an admin or an active scorer.
+    - Clock: periods, with extra time only in knockouts; kick-off needs an ongoing tournament.
+    - Events: goals with assists, own goals, cards (a second yellow adds a red), undo (an automatic red also removes its yellow), and an append-only match log.
+    - Results and advancement: result declaration with POTM, walkover/forfeit, cancellation. Knockout winners and semi-final losers advance automatically; group positions fill crossover seeds once the group stage ends.
+    - Card notices: from red cards and yellow thresholds, shown in the console before the player's next match.
+    - Reads: standings, leaders, a light `/live?since=version` poll, the console and `/me/scoring`.
+  - Tests: 13 new unit tests (74 in total); the 56-check 5B e2e run and the Phase 1–5A runs pass.
+- **Frontend**:
+  - Scorer console `/dashboard/matches/:matchId/console` (mobile-first): live scoreboard with a running clock (corrected for device time), period buttons with confirmation, per-team Goal / Own goal / Yellow / Red, event dialog (player, assist, editable minute), timeline with undo, card-notice banner, Declare result (penalties/tie for level knockouts, POTM), walkover/forfeit and cancel for organizers, and a match log that refreshes after each action.
+  - Public match page: live scoreboard, timeline, POTM and a 10 s poll while live.
+  - Tournament page: a Table/Groups tab (standings with form, qualifiers highlighted) and a Top scorers tab.
+  - Organizer and dashboard: a Card notices card in the Fixtures tab, Score/Live links on matches, a "Matches to score" dashboard card, and "pens"/"aet" next to scores.
+  - Tests: 56 tests. Verified in Chromium: scorer on a phone runs a semi-final (goal + assist, second yellow → red, undo, half-time/full time, result + POTM); the public page updated by polling in 8 s; a level semi went to penalties; the bracket final filled; top scorers; the organizer handles a red-card notice.

@@ -9,6 +9,7 @@ import { ACCOUNT_ROLE, ACCOUNT_ROLE_LABEL } from "@/constants/user.constants";
 import { selectCurrentUser } from "@/store/slices/authSlice";
 import InvitationsCard from "@/pages/dashboard/home/InvitationsCard";
 import MyTeamsCard from "@/pages/dashboard/home/MyTeamsCard";
+import ScoringMatchesCard from "@/pages/dashboard/home/ScoringMatchesCard";
 
 const getProfileChecklist = (user) => [
   { label: "Add a profile photo", isDone: Boolean(user.photoUrl) },
@@ -25,6 +26,7 @@ const MemberHome = ({ user }) => {
 
   return (
     <div className="grid gap-6 lg:grid-cols-2">
+      <ScoringMatchesCard />
       <InvitationsCard onResponded={() => setTeamsReloadKey((key) => key + 1)} />
       <Card
         title="Complete your profile"
@@ -77,18 +79,21 @@ const AdminHome = () => (
 );
 
 const OrganizerHome = () => (
-  <Card
-    title="Your tournaments"
-    subtitle="Complete details, add grounds and rules, and open registration"
-  >
-    <Link
-      to={ROUTES.MANAGE_TOURNAMENTS}
-      className="inline-flex items-center gap-2 text-sm font-semibold text-link hover:underline"
+  <div className="grid gap-6 lg:grid-cols-2">
+    <ScoringMatchesCard />
+    <Card
+      title="Your tournaments"
+      subtitle="Complete details, add grounds and rules, and open registration"
     >
-      <Trophy className="size-4" aria-hidden="true" />
-      Manage my tournaments
-    </Link>
-  </Card>
+      <Link
+        to={ROUTES.MANAGE_TOURNAMENTS}
+        className="inline-flex items-center gap-2 text-sm font-semibold text-link hover:underline"
+      >
+        <Trophy className="size-4" aria-hidden="true" />
+        Manage my tournaments
+      </Link>
+    </Card>
+  </div>
 );
 
 const HOME_BY_ROLE = {

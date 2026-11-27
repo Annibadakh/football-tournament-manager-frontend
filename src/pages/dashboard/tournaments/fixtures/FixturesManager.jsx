@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { CalendarClock, Pencil, Plus, Sparkles, Trash2 } from "lucide-react";
+import { Link } from "react-router-dom";
+import { CalendarClock, Pencil, Plus, Sparkles, Timer, Trash2 } from "lucide-react";
 import MatchList from "@/components/match/MatchList";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
@@ -14,8 +15,10 @@ import {
   MATCH_STATUS,
   ROUND_ROBIN_FORMATS,
 } from "@/constants/match.constants";
+import { buildPath, ROUTES } from "@/constants/routes.constants";
 import * as matchService from "@/services/match.service";
 import { listGrounds } from "@/services/tournament.service";
+import CardNoticesCard from "@/pages/dashboard/tournaments/fixtures/CardNoticesCard";
 import GroupsEditor from "@/pages/dashboard/tournaments/fixtures/GroupsEditor";
 import MatchFormModal from "@/pages/dashboard/tournaments/fixtures/MatchFormModal";
 import MatchSettingsCard from "@/pages/dashboard/tournaments/fixtures/MatchSettingsCard";
@@ -104,30 +107,49 @@ const FixturesManager = ({ tournament, onTournamentSaved }) => {
     if (res.ok) reload();
   };
 
-  const renderActions = (match) =>
-    match.status === MATCH_STATUS.SCHEDULED && (
-      <div className="flex shrink-0 gap-1 pl-11 sm:pl-0">
-        <Button
-          size="sm"
-          variant="ghost"
-          className="px-2"
-          aria-label={`Edit match M${match.matchNumber}`}
-          onClick={() => setModal({ type: "match", match })}
-          startIcon={<Pencil className="size-4" />}
-        />
-        <Button
-          size="sm"
-          variant="ghost"
-          className="px-2 text-danger"
-          aria-label={`Delete match M${match.matchNumber}`}
-          onClick={() => setConfirm({ type: "match", match })}
-          startIcon={<Trash2 className="size-4" />}
-        />
-      </div>
-    );
+  const canScore = (match) =>
+    [MATCH_STATUS.SCHEDULED, MATCH_STATUS.LIVE].includes(match.status) &&
+    match.homeTeam &&
+    match.awayTeam;
+
+  const renderActions = (match) => (
+    <div className="flex shrink-0 gap-1 pl-11 sm:pl-0">
+      {canScore(match) && (
+        <Link
+          to={buildPath(ROUTES.MATCH_CONSOLE, { matchId: match.id })}
+          aria-label={`Score match M${match.matchNumber}`}
+          className="inline-flex h-8 items-center gap-1 rounded-lg px-2 text-sm font-semibold text-link hover:bg-surface-muted"
+        >
+          <Timer className="size-4" aria-hidden="true" />
+          {match.status === MATCH_STATUS.LIVE ? "Live" : "Score"}
+        </Link>
+      )}
+      {match.status === MATCH_STATUS.SCHEDULED && (
+        <>
+          <Button
+            size="sm"
+            variant="ghost"
+            className="px-2"
+            aria-label={`Edit match M${match.matchNumber}`}
+            onClick={() => setModal({ type: "match", match })}
+            startIcon={<Pencil className="size-4" />}
+          />
+          <Button
+            size="sm"
+            variant="ghost"
+            className="px-2 text-danger"
+            aria-label={`Delete match M${match.matchNumber}`}
+            onClick={() => setConfirm({ type: "match", match })}
+            startIcon={<Trash2 className="size-4" />}
+          />
+        </>
+      )}
+    </div>
+  );
 
   return (
     <div className="flex flex-col gap-6">
+      <CardNoticesCard tournamentId={tournament.slug} reloadKey={data.version} />
       <MatchSettingsCard tournament={tournament} onSaved={onTournamentSaved} />
 
       {usesGroups && (

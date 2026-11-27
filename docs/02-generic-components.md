@@ -80,4 +80,7 @@ Every screen composes these instead of re-styling raw HTML elements.
 ## Match components (`components/match`)
 `MatchRow` (teams or placeholders, score or "v", IST kick-off, ground, group; optional actions slot), `MatchList` (grouped by round or IST date), `BracketView` (rounds as columns, horizontal scroll, third place), `MatchStatusBadge`, `TeamMatchesCard`. Times are shown and entered in IST through `utils/match` (`formatKickoff`, `toIstInputValue`, `fromIstInputValue`). `Select` takes `ariaLabel` when it has no visible label.
 
+## Live components
+`LiveScoreboard` (teams, score, running clock via `useMatchClock`, status, "on penalties"), `EventTimeline` (home left / away right, period dividers, assists, second-yellow reds), `StandingsTable` (P W D L GF GA GD Pts + form, qualifiers highlighted), `LeadersList`. Hooks: `useMatchClock` (ticks every second, corrects device time with `serverTime`/`receivedAt`) and `useLiveMatch` (polls `/live?since=version` every 10 s while live; replace with Socket.IO later).
+
 More components will be added as features need them. Update this file when one is added or its API changes.
