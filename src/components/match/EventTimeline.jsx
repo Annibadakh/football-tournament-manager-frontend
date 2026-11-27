@@ -1,3 +1,4 @@
+import PlayerLink from "@/components/profile/PlayerLink";
 import { MATCH_EVENT_TYPE, MATCH_PERIOD_LABEL } from "@/constants/match.constants";
 import { cn } from "@/utils/cn";
 
@@ -64,7 +65,7 @@ const EventTimeline = ({ events, homeTeamId, newestFirst = false }) => {
             </span>
             <EventIcon type={event.type} />
             <span className="min-w-0">
-              <span className="font-semibold text-fg">{event.player?.fullName}</span>
+              <PlayerLink player={event.player} className="font-semibold text-fg" />
               <span className="block text-xs text-fg-muted">
                 {describe(event)}
                 {event.assist && ` · assist ${event.assist.fullName}`}

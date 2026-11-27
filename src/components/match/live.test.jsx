@@ -6,6 +6,8 @@ import StandingsTable from "@/components/match/StandingsTable";
 import { MATCH_EVENT_TYPE, MATCH_PERIOD } from "@/constants/match.constants";
 import { computeClock, periodBaseMinute } from "@/hooks/useMatchClock";
 
+const renderWithRouter = (ui) => render(<MemoryRouter>{ui}</MemoryRouter>);
+
 const settings = { halfMinutes: 20, extraTimeHalfMinutes: 5 };
 
 describe("match clock", () => {
@@ -61,7 +63,7 @@ describe("EventTimeline", () => {
   const away = { id: "a", name: "Away", shortName: "AWY" };
 
   it("shows period dividers, goals with assists and second-yellow reds", () => {
-    render(
+    renderWithRouter(
       <EventTimeline
         homeTeamId="h"
         events={[
@@ -92,7 +94,7 @@ describe("EventTimeline", () => {
   });
 
   it("says so when nothing has happened", () => {
-    render(<EventTimeline homeTeamId="h" events={[]} />);
+    renderWithRouter(<EventTimeline homeTeamId="h" events={[]} />);
     expect(screen.getByText("No goals or cards yet.")).toBeInTheDocument();
   });
 });
@@ -128,7 +130,7 @@ describe("StandingsTable and LeadersList", () => {
   });
 
   it("lists scorers and an empty assists column", () => {
-    render(
+    renderWithRouter(
       <LeadersList
         leaders={{
           scorers: [{ player: { id: "p1", fullName: "Akash" }, team: { name: "Kings" }, count: 3 }],

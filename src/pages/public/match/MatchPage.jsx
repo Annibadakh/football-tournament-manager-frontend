@@ -4,6 +4,8 @@ import { CalendarClock, MapPin, Medal, Radio, Swords, Timer } from "lucide-react
 import EventTimeline from "@/components/match/EventTimeline";
 import LiveScoreboard from "@/components/match/LiveScoreboard";
 import StreamPlayer from "@/components/stream/StreamPlayer";
+import PlayerLink from "@/components/profile/PlayerLink";
+import ShareButton from "@/components/ui/ShareButton";
 import Card from "@/components/ui/Card";
 import EmptyState from "@/components/ui/EmptyState";
 import PageLoader from "@/components/ui/PageLoader";
@@ -35,14 +37,19 @@ const MatchView = ({ initial }) => {
         >
           {match.tournament.name}
         </Link>
-        {match.canScore && (
-          <Link
-            to={buildPath(ROUTES.MATCH_CONSOLE, { matchId: match.id })}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-brand-700 px-3 py-1.5 text-sm font-semibold text-white hover:bg-brand-800"
-          >
-            <Timer className="size-4" aria-hidden="true" /> Open scorer console
-          </Link>
-        )}
+        <div className="flex flex-wrap items-center gap-2">
+          {match.canScore && (
+            <Link
+              to={buildPath(ROUTES.MATCH_CONSOLE, { matchId: match.id })}
+              className="inline-flex items-center gap-1.5 rounded-lg bg-brand-700 px-3 py-1.5 text-sm font-semibold text-white hover:bg-brand-800"
+            >
+              <Timer className="size-4" aria-hidden="true" /> Open scorer console
+            </Link>
+          )}
+          <ShareButton
+            title={`${match.homeTeam?.name ?? "TBD"} v ${match.awayTeam?.name ?? "TBD"} · ${match.tournament.name}`}
+          />
+        </div>
       </div>
       {match.stream && <StreamPlayer stream={match.stream} />}
       <Card>
@@ -70,7 +77,7 @@ const MatchView = ({ initial }) => {
           {match.potm && (
             <p className="inline-flex items-center gap-2 rounded-full bg-accent-50 px-3 py-1 text-sm font-semibold text-accent-800 dark:bg-accent-900 dark:text-accent-100">
               <Medal className="size-4" aria-hidden="true" /> Player of the Match:{" "}
-              {match.potm.fullName}
+              <PlayerLink player={match.potm} />
             </p>
           )}
           {match.nextMatch && match.status === MATCH_STATUS.SCHEDULED && (

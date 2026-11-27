@@ -4,6 +4,8 @@ export const ROUTES = Object.freeze({
   TOURNAMENT: "/tournaments/:tournamentId",
   TEAM: "/teams/:teamId",
   MATCH: "/matches/:matchId",
+  PLAYERS: "/players",
+  PLAYER: "/players/:playerId",
   MATCH_CONSOLE: "/dashboard/matches/:matchId/console",
   STREAMS: "/dashboard/streams/:tournamentId",
   LOGIN: "/login",

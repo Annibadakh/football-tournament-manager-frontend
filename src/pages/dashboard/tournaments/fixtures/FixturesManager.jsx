@@ -18,6 +18,7 @@ import {
 import { buildPath, ROUTES } from "@/constants/routes.constants";
 import * as matchService from "@/services/match.service";
 import { listGrounds } from "@/services/tournament.service";
+import AwardsManager from "@/pages/dashboard/tournaments/fixtures/AwardsManager";
 import CardNoticesCard from "@/pages/dashboard/tournaments/fixtures/CardNoticesCard";
 import GroupsEditor from "@/pages/dashboard/tournaments/fixtures/GroupsEditor";
 import MatchFormModal from "@/pages/dashboard/tournaments/fixtures/MatchFormModal";
@@ -243,6 +244,8 @@ const FixturesManager = ({ tournament, onTournamentSaved }) => {
           />
         )}
       </Card>
+
+      <AwardsManager tournament={tournament} />
 
       {modal?.type === "schedule" && (
         <ScheduleModal

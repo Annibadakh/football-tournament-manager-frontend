@@ -86,4 +86,7 @@ Every screen composes these instead of re-styling raw HTML elements.
 ## Stream components (`components/stream`)
 `StreamPlayer` (privacy-enhanced YouTube embed with a Watch on YouTube link; thumbnail + button when the channel blocks embedding) and `StreamThumb` (selectable tile with status, time or match).
 
+## Profile components (`components/profile`) and sharing
+`PlayerLink` (links verified players to their profile; guests stay plain text), `AwardsList` (winner or tournament line, optional actions), `AwardIcon`, `TeamStatsCard`. `ShareButton` (ui): native share sheet on phones, WhatsApp / Copy link menu on desktop.
+
 More components will be added as features need them. Update this file when one is added or its API changes.

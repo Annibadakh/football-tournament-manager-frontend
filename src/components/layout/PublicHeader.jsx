@@ -1,6 +1,6 @@
 import { Link, NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Trophy } from "lucide-react";
+import { Trophy, Users } from "lucide-react";
 import Logo from "@/components/layout/Logo";
 import ThemeToggle from "@/components/layout/ThemeToggle";
 import UserMenu from "@/components/layout/UserMenu";
@@ -17,8 +17,8 @@ const PublicHeader = () => {
   return (
     <header className="sticky top-0 z-20 border-b border-line bg-surface/90 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4">
-        <div className="flex min-w-0 items-center gap-3 sm:gap-6">
-          <Logo />
+        <div className="flex min-w-0 items-center gap-2 sm:gap-6">
+          <Logo className="shrink-0" />
           {/* Icon-only on phones so the header never wraps */}
           <NavLink
             to={ROUTES.TOURNAMENTS}
@@ -29,6 +29,16 @@ const PublicHeader = () => {
           >
             <Trophy className="size-5 sm:hidden" aria-hidden="true" />
             <span className="hidden sm:inline">Tournaments</span>
+          </NavLink>
+          <NavLink
+            to={ROUTES.PLAYERS}
+            aria-label="Players"
+            className={({ isActive }) =>
+              `inline-flex items-center gap-1.5 rounded-lg p-2 text-sm font-semibold sm:p-0 ${isActive ? "text-link" : "text-fg-muted hover:text-fg"}`
+            }
+          >
+            <Users className="size-5 sm:hidden" aria-hidden="true" />
+            <span className="hidden sm:inline">Players</span>
           </NavLink>
         </div>
         <div className="flex items-center gap-2 sm:gap-3">

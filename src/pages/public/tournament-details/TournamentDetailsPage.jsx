@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import FixturesSection from "@/pages/public/tournament-details/FixturesSection";
 import StreamsSection from "@/pages/public/tournament-details/StreamsSection";
+import AwardsAndDownloads from "@/pages/public/tournament-details/AwardsAndDownloads";
+import ShareButton from "@/components/ui/ShareButton";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import {
@@ -214,8 +216,9 @@ const TournamentDetailsPage = () => {
             <h1 className="mt-2 text-3xl leading-tight text-fg sm:text-4xl">{tournament.name}</h1>
             {categories && <p className="mt-1 text-fg-muted">{categories}</p>}
           </div>
-          <div className="sm:pt-4">
+          <div className="flex flex-wrap gap-2 sm:pt-4">
             <RegisterTeamButton tournament={tournament} />
+            <ShareButton title={`${tournament.name} on Maidaan`} />
           </div>
         </div>
 
@@ -301,6 +304,12 @@ const TournamentDetailsPage = () => {
           </div>
 
           <div className="flex flex-col gap-6">
+            <AwardsAndDownloads
+              tournament={tournament}
+              hasMatches={[TOURNAMENT_STATUS.ONGOING, TOURNAMENT_STATUS.COMPLETED].includes(
+                tournament.status,
+              )}
+            />
             <Card title="Venue">
               {tournament.venue ? (
                 <div className="flex flex-col gap-2 text-sm">

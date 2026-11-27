@@ -13,6 +13,8 @@ import {
   X,
 } from "lucide-react";
 import TeamMatchesCard from "@/components/match/TeamMatchesCard";
+import TeamStatsCard from "@/components/profile/TeamStatsCard";
+import ShareButton from "@/components/ui/ShareButton";
 import OfflinePaymentModal from "@/components/payment/OfflinePaymentModal";
 import PaymentCard from "@/components/payment/PaymentCard";
 import EditPlayerModal from "@/components/team/EditPlayerModal";
@@ -250,6 +252,9 @@ const TeamPage = () => {
             </Button>
           </div>
         )}
+        {team.status === TEAM_STATUS.CONFIRMED && !isManager && (
+          <ShareButton title={`${team.name} · ${team.tournament.name}`} />
+        )}
         {canWithdraw && (
           <Button
             variant="ghost"
@@ -309,6 +314,7 @@ const TeamPage = () => {
         <SquadList members={team.members} renderActions={renderMemberActions} />
       </Card>
 
+      {team.status === TEAM_STATUS.CONFIRMED && <TeamStatsCard teamId={team.id} />}
       {team.status === TEAM_STATUS.CONFIRMED && (
         <TeamMatchesCard tournamentId={team.tournament.slug} teamId={team.id} />
       )}

@@ -1,8 +1,11 @@
+import { MemoryRouter } from "react-router-dom";
 import { render, screen } from "@testing-library/react";
 import SquadList from "@/components/team/SquadList";
 import { EMPTY_PERSON, MEMBER_STATUS, PERSON_MODE } from "@/constants/team.constants";
 import { validateWithSchema } from "@/utils/form";
 import { invitePlayerSchema, teamRequestSchema, toPersonPayload } from "@/validations/team.schema";
+
+const renderWithRouter = (ui) => render(<MemoryRouter>{ui}</MemoryRouter>);
 
 describe("team schemas", () => {
   it("turns a verified pick or a guest into the API person shape", () => {
@@ -44,7 +47,7 @@ describe("team schemas", () => {
 
 describe("SquadList", () => {
   it("shows captain, guest and pending badges", () => {
-    render(
+    renderWithRouter(
       <SquadList
         members={[
           {

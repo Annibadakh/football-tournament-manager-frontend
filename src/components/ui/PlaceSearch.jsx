@@ -25,6 +25,8 @@ const PlaceSearch = ({
   helperText,
   required = false,
   disabled = false,
+  // Accessible name when there is no visible label
+  ariaLabel,
   className = "",
 }) => {
   const id = `${useId()}-${name}`;
@@ -142,6 +144,7 @@ const PlaceSearch = ({
             <input
               id={id}
               role="combobox"
+              aria-label={label ? undefined : ariaLabel}
               aria-expanded={isOpen}
               aria-autocomplete="list"
               aria-invalid={Boolean(error)}

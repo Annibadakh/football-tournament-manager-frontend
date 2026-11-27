@@ -1,3 +1,4 @@
+import PlayerLink from "@/components/profile/PlayerLink";
 import { BadgeCheck, Crown } from "lucide-react";
 import Avatar from "@/components/ui/Avatar";
 import Badge from "@/components/ui/Badge";
@@ -16,7 +17,7 @@ const SquadList = ({ members, renderActions }) => (
         <Avatar src={member.player.photoUrl} name={member.player.fullName} size="sm" />
         <div className="min-w-0 flex-1">
           <p className="flex flex-wrap items-center gap-1.5 font-semibold text-fg">
-            <span className="truncate">{member.player.fullName}</span>
+            <PlayerLink player={member.player} className="truncate" />
             {member.player.isVerified && (
               <BadgeCheck
                 className="size-4 text-brand-600 dark:text-brand-400"

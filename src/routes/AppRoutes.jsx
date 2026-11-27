@@ -24,6 +24,8 @@ import UnauthorizedPage from "@/pages/errors/UnauthorizedPage";
 import HomePage from "@/pages/public/home/HomePage";
 import TeamPage from "@/pages/public/team/TeamPage";
 import MatchPage from "@/pages/public/match/MatchPage";
+import PlayerProfilePage from "@/pages/public/players/PlayerProfilePage";
+import PlayersPage from "@/pages/public/players/PlayersPage";
 import ScorerConsolePage from "@/pages/dashboard/matches/ScorerConsolePage";
 import StreamsPage from "@/pages/dashboard/streams/StreamsPage";
 import TournamentDetailsPage from "@/pages/public/tournament-details/TournamentDetailsPage";
@@ -51,6 +53,8 @@ const AppRoutes = () => (
         <Route path={ROUTES.TOURNAMENT} element={<TournamentDetailsPage />} />
         <Route path={ROUTES.TEAM} element={<TeamPage />} />
         <Route path={ROUTES.MATCH} element={<MatchPage />} />
+        <Route path={ROUTES.PLAYERS} element={<PlayersPage />} />
+        <Route path={ROUTES.PLAYER} element={<PlayerProfilePage />} />
         <Route path={ROUTES.UNAUTHORIZED} element={<UnauthorizedPage />} />
         {ComponentShowcasePage && (
           <Route path={ROUTES.DEV_COMPONENTS} element={<ComponentShowcasePage />} />
